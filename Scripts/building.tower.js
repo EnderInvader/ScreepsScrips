@@ -31,7 +31,7 @@ var buildingTower = {
         }
 
         //if there are no hostiles....
-        if(hostiles.length == null) {
+        if(hostiles.length == 0) {
             
             //....first heal any damaged creeps
             for (let name in Game.creeps) {
