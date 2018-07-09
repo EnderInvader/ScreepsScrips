@@ -82,9 +82,7 @@ module.exports.loop = function () {
 	for(var name in Game.spawns) {
 		var spawn = Game.spawns[name];
         buildingSpawner.run(spawn);
-    }
-	for(var name in Game.StructureTower) {
-		var towers = Game.StructureTower[name];
-        buildingTower.run(tower);
+		var room= Game.spawns.[name].room;s
+        buildingTower.run(room);
     }
 }

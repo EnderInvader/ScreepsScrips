@@ -17,16 +17,15 @@ var buildingTower = {
         }
         
         */
-		var myRoomName = tower.room
-        var hostiles = Game.rooms[myRoomName].find(FIND_HOSTILE_CREEPS);
-        var towers = Game.rooms[myRoomName].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
+		var hostiles = Game.rooms[room].find(FIND_HOSTILE_CREEPS);
+        var towers = Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
 
-		console.log("${myRoomName} has towers ${towers}");
+		console.log("${room} has towers ${towers}");
 		
         //if there are hostiles - attakc them    
         if(hostiles.length > 0) {
             var username = hostiles[0].owner.username;
-            Game.notify(`User ${username} spotted in room ${myRoomName}`);
+            Game.notify(`User ${username} spotted in room ${room}`);
             towers.forEach(tower => tower.attack(hostiles[0]));
             console.log("ALERT!!!! WE ARE UNDER ATTACK!!!!! ALERT!!!! WE ARE UNDER ATTACK!!!!! ALERT!!!! WE ARE UNDER ATTACK!!!!! ALERT!!!! WE ARE UNDER ATTACK!!!!! ");
         }
