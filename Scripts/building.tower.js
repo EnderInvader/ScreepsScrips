@@ -1,7 +1,7 @@
 var buildingTower = {
 
     //TOWER CODE
-    run: function(tower) {
+    run: function(room) {
 
         /*  
         
