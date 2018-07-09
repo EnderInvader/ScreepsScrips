@@ -82,8 +82,8 @@ module.exports.loop = function () {
 	for(var name in Game.spawns) {
 		var spawn = Game.spawns[name];
         buildingSpawner.run(spawn);
-		var room = Game.spawns[name].room;
-        buildingTower.run(room);
-        console.log(room);
+		var roomName = Game.spawns[name].room;
+        buildingTower.run(roomName);
+        console.log(roomName);
     }
 }

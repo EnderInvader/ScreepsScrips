@@ -1,7 +1,7 @@
 var buildingTower = {
 
     //TOWER CODE
-    run: function(room) {
+    run: function(roomName) {
 
         /*  
         
@@ -17,21 +17,21 @@ var buildingTower = {
         }
         
         */
-		var hostiles = Game.room.find(FIND_HOSTILE_CREEPS);
-        var towers = Game.room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
+		var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
+        var towers = Game.rooms[roomName].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
 
-		console.log("${room} has towers ${towers}");
+		console.log("${roomName} has towers ${towers}");
 		
         //if there are hostiles - attakc them    
         if(hostiles.length > 0) {
             var username = hostiles[0].owner.username;
-            Game.notify(`User ${username} spotted in room ${room}`);
+            Game.notify(`User ${username} spotted in room ${roomName}`);
             towers.forEach(tower => tower.attack(hostiles[0]));
             console.log("ALERT!!!! WE ARE UNDER ATTACK!!!!! ALERT!!!! WE ARE UNDER ATTACK!!!!! ALERT!!!! WE ARE UNDER ATTACK!!!!! ALERT!!!! WE ARE UNDER ATTACK!!!!! ");
         }
 
         //if there are no hostiles....
-        if(hostiles.length === 0) {
+        if(hostiles.length == null) {
             
             //....first heal any damaged creeps
             for (let name in Game.creeps) {
