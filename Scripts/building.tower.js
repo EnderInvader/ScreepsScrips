@@ -18,7 +18,7 @@ var buildingTower = {
         
         */
 		/*var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);*/
-		var creepsInRoom = Game.rooms[roomName].find(Game.creeps);
+		var creepsInRoom = Game.creeps;
 		for (name in creepsInRoom){
 			var creep = Game.creeps[name];
 			console.log(creep.my)
