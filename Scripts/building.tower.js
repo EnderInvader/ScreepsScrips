@@ -1,77 +1,38 @@
 var buildingTower = {
-
-    //TOWER CODE
-    run: function(roomName) {
-
-        /*  
-        
-        ORIGINAL TOWER CODE
-
-        //TOWER CODE
-        var towers = Game.rooms.W61S27.find(FIND_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER});
-        for (let tower of towers) {
-            var target = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-            if (target != undefined) {
-                tower.attack(target);
+    run: function() 
+    {
+        var towers = _.filter(Game.structures, (s) => s.structureType == STRUCTURE_TOWER);
+        for (i = 0; i < towers.length; i++)
+        {
+            this.run(towers[ i ]);
+        }
+    },
+    run: function(tower)
+    {
+        var enemy = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        if (enemy)
+            tower.attack(enemy);
+        else if (tower.energy >= 600)
+        {
+            var priority = 1;
+            var targets = [];
+            while (targets.length == 0 && priority <= 3)
+            {
+                var targets = this.getRepairTargets(tower, priority);
+                if (targets.length > 0) 
+                    tower.repair(tower.pos.findClosestByRange(targets));
+                priority++;
             }
         }
-        
-        */
-		
-		var creepsInRoom = Game.creeps;
-		for (name in creepsInRoom){
-			var creep = Game.creeps[name];
-			if (creep.my = false) {
-				var hostilesInRoom = "True";
-				console.log(creep.owner)
-			}
-			else {
-				var hostilesInRoom = "False";
-			}
-		}
-        var towers = Game.rooms[roomName].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
-
-		console.log("${roomName} has towers ${towers}");
-		
-		if (hostilesInRoom = "True") {
-			var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
-		}
-		
-        //if there are hostiles - attakc them    
-        if(hostiles.length > 0) {
-            var username = hostiles[0].owner.username;
-            Game.notify(`User ${username} spotted in room ${roomName}`);
-            towers.forEach(tower => tower.attack(hostiles[0]));
-            console.log("ALERT!!!! WE ARE UNDER ATTACK!!!!! ALERT!!!! WE ARE UNDER ATTACK!!!!! ALERT!!!! WE ARE UNDER ATTACK!!!!! ALERT!!!! WE ARE UNDER ATTACK!!!!! ");
-        }
-
-        //if there are no hostiles....
-        if(hostiles = undefined) {
-            
-            //....first heal any damaged creeps
-            for (let name in Game.creeps) {
-                // get the creep object
-                var creep = Game.creeps[name];
-                if (creep.hits < creep.hitsMax) {
-                    towers.forEach(tower => tower.heal(creep));
-                    console.log("Tower is healing Creeps.");
-                }
-            }        
-        
-           for(var i in towers){
-                //...repair Buildings! :) But ONLY until HALF the energy of the tower is gone.
-                //Because we don't want to be exposed if something shows up at our door :)
-                if(towers.energy > ((towers.energyCapacity / 10)* 9)){
-
-                    //Find the closest damaged Structure
-                    var closestDamagedStructure = towers.pos.findClosestByRange(FIND_STRUCTURES, {filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART});
-    	            if(closestDamagedStructure) {
-    	 	            towers.repair(closestDamagedStructure);
-    	 	            console.log("The tower is repairing buildings.");
-                    }
-                }
-            }
-            
+    },
+    getRepairTargets: function(tower, priority)
+    {
+        switch (priority)
+        {
+            case 1: return _.filter(tower.room.find(FIND_STRUCTURES), (s) => (s.structureType == STRUCTURE_ROAD || s.structureType == STRUCTURE_CONTAINER) && s.hitsMax - s.hits >= 1500);
+            case 2: return _.filter(tower.room.find(FIND_STRUCTURES), (s) => s.structureType == STRUCTURE_RAMPART && s.hits < 300000);
+            case 3: return _.filter(tower.room.find(FIND_STRUCTURES), (s) => s.structureType == STRUCTURE_WALL && s.hits < 300000);
+            default: return null;
         }
     }
 };

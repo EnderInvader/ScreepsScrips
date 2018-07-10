@@ -83,7 +83,7 @@ module.exports.loop = function () {
 		var spawn = Game.spawns[name];
         buildingSpawner.run(spawn);
 		var roomName = Game.spawns[name].room;
-        buildingTower.run(roomName);
+        buildingTower.run();
         console.log(roomName);
     }
 }
