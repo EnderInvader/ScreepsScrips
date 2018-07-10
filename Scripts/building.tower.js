@@ -21,9 +21,9 @@ var buildingTower = {
 		var creepsInRoom = Game.creeps;
 		for (name in creepsInRoom){
 			var creep = Game.creeps[name];
-			console.log(creep.my)
 			if (creep.my = false) {
 				var hostilesInRoom = "True";
+				console.log(creep.owner)
 			}
 			else {
 				var hostilesInRoom = "False";
