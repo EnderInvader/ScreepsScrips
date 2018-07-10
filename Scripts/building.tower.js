@@ -17,7 +17,15 @@ var buildingTower = {
         }
         
         */
-		var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
+		/*var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);*/
+		var creepsInRoom = Game.rooms[roomName].find(Game.creeps);
+		for (name in creepsInRoom){
+			var creep = Game.creeps[name];
+			console.log(creep.my)
+			if (creep.my = foe) {
+				
+			}
+		}
         var towers = Game.rooms[roomName].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
 
 		console.log("${roomName} has towers ${towers}");
