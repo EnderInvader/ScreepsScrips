@@ -47,7 +47,7 @@ module.exports.loop = function () {
     if(rangeddefenders.length < 2) {
         var newName = 'RangedDefender' + Game.time;
         console.log('Spawning new ranged defender: ' + newName);
-		Game.spawns['Spawn1'].spawnCreep( [TOUGH,TOUGH,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,MOVE],     newName,     { memory: { role: 'rangeddefender' , level: 'medium' } } );
+		Game.spawns['Spawn1'].spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE],     newName,     { memory: { role: 'rangeddefender' , level: 'medium' } } );
     }
     
     if(Game.spawns['Spawn1'].spawning) { 
