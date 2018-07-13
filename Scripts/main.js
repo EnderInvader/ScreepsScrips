@@ -84,6 +84,6 @@ module.exports.loop = function () {
         buildingSpawner.run(spawn);
 		//var roomName = Game.spawns[name].room;
 		//console.log(roomName);
-        //buildingTower.run();
+        buildingTower.play();
     }
 }

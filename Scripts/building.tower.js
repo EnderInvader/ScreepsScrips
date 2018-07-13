@@ -1,5 +1,5 @@
 var buildingTower = {
-    run: function() 
+    play: function() 
     {
         var towers = _.filter(Game.structures, (s) => s.structureType == STRUCTURE_TOWER);
         for (i = 0; i < towers.length; i++)
