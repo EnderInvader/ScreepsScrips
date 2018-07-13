@@ -19,28 +19,28 @@ module.exports.loop = function () {
     if(harvesters.length < 4) {
         var newName = 'Harvester' + Game.time;
         console.log('Spawning new harvester: ' + newName);
-		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE],     newName,     { memory: { role: 'harvester' , level: 'big' } } );
+		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE],     newName,     { memory: { role: 'harvester' , level: 'big' } } );
     }
 	
 	var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
     if(builders.length < 3) {
         var newName = 'Builder' + Game.time;
         console.log('Spawning new builder: ' + newName);
-		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE],     newName,     { memory: { role: 'builder' , level: 'big' } } );
+		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE],     newName,     { memory: { role: 'builder' , level: 'big' } } );
     }
 	
 	var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     if(upgraders.length < 2) {
         var newName = 'Upgrader' + Game.time;
         console.log('Spawning new upgrader: ' + newName);
-		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE],     newName,     { memory: { role: 'upgrader' , level: 'big' } } );
+		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE],     newName,     { memory: { role: 'upgrader' , level: 'big' } } );
     }
 	
 	var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
     if(repairers.length < 1) {
         var newName = 'Repairer' + Game.time;
         console.log('Spawning new repairer: ' + newName);
-		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE],     newName,     { memory: { role: 'repairer' , level: 'big' } } );
+		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],     newName,     { memory: { role: 'repairer' , level: 'big' } } );
     }
 	
 	var rangeddefenders = _.filter(Game.creeps, (creep) => creep.memory.role == 'rangeddefender');
