@@ -40,7 +40,7 @@ module.exports.loop = function () {
     if(repairers.length < 1) {
         var newName = 'Repairer' + Game.time;
         console.log('Spawning new repairer: ' + newName);
-		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],     newName,     { memory: { role: 'repairer' , level: 4 } } );
+		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE] ),     newName,     { memory: { role: 'repairer' , level: 4 } } );
     }
 	
 	var rangeddefenders = _.filter(Game.creeps, (creep) => creep.memory.role == 'rangeddefender');
