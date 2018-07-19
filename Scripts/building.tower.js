@@ -16,7 +16,7 @@ var buildingTower = {
         {
             var priority = 1;
             var targets = [];
-            while (targets.length == 0 && priority <= 3)
+            while (targets = null && priority <= 3)
             {
 				var healTargets = this.getHealTargets(tower, priority);
                 if (healTargets.length > 0) 
