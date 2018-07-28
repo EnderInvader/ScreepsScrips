@@ -15,19 +15,15 @@ var buildingTower = {
         else if (tower.energy >= 600)
         {
             var priority = 1;
-            var targets = [];
-            while (targets = [] && priority <= 3)
-            {
-				var healTargets = this.getHealTargets(tower, priority);
-                if (healTargets != []) 
-                    tower.repair(tower.pos.findClosestByRange(healTargets));
-                priority++;
-				
-                var repairTargets = this.getRepairTargets(tower, priority);
-                if (repairTargets != []) 
-                    tower.repair(tower.pos.findClosestByRange(repairTargets));
-                priority++;
-            }
+			var healTargets = this.getHealTargets(tower, priority);
+			var repairTargets = this.getRepairTargets(tower, priority);
+            
+            if (healTargets != []) 
+                tower.repair(tower.pos.findClosestByRange(healTargets));
+            priority++;
+            else if (repairTargets != []) 
+                tower.repair(tower.pos.findClosestByRange(repairTargets));
+			priority++;
         }
     },
 	getHealTargets: function(tower, priority)
