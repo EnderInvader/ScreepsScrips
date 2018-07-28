@@ -20,12 +20,12 @@ var buildingTower = {
             
             if (healTargets != []) {
                 tower.repair(tower.pos.findClosestByRange(healTargets));
+				priority++;
 			}
-            priority++;
             else if (repairTargets != []) {
                 tower.repair(tower.pos.findClosestByRange(repairTargets));
+				priority++;
 			}
-			priority++;
         }
     },
 	getHealTargets: function(tower, priority)
