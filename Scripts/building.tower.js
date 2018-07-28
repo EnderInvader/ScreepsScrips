@@ -18,11 +18,13 @@ var buildingTower = {
 			var healTargets = this.getHealTargets(tower, priority);
 			var repairTargets = this.getRepairTargets(tower, priority);
             
-            if (healTargets != []) 
+            if (healTargets != []) {
                 tower.repair(tower.pos.findClosestByRange(healTargets));
+			}
             priority++;
-            else if (repairTargets != []) 
+            else if (repairTargets != []) {
                 tower.repair(tower.pos.findClosestByRange(repairTargets));
+			}
 			priority++;
         }
     },
