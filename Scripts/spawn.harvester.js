@@ -46,18 +46,15 @@ var spawnHarvester = {
 
 var consoleSpawnHarvester = {
 	run: function(spawnName,level) {
-		var spawn = _.filter(Game.spawns, (spawn) => spawn.name == spawnName);
 		if (level == 1) {
 			var newName = 'StarterHarvester' + Game.time;
 			console.log('Spawning new harvester: ' + newName);
-			console.log(spawnName);
-			console.log(spawn);
-			/**spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'harvester' , level:1} } );**/
+			Game.spawns[spawnName].spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'harvester' , level:1} } );
 		}
 		else if (level == 2) {
 			var newName = 'BasicHarvester' + Game.time;
 			console.log('Spawning new harvester: ' + newName);
-			spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'harvester' , level:2} } );
+			Game.spawns[spawnName].spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'harvester' , level:2} } );
 		}
 	}
 };
