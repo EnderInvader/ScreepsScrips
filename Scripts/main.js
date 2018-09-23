@@ -6,6 +6,8 @@ var roleRangedDefender= require('role.rangeddefender');
 var buildingSpawner = require('building.spawner');
 var buildingTower = require('building.tower');
 var spawnHarvester = require('spawn.harvester');
+var spawnUpgrader = require('spawn.upgrader');
+var spawnBuilder = require('spawn.builder');
 
 module.exports.loop = function () {
 
@@ -16,8 +18,6 @@ module.exports.loop = function () {
         }
     }
 
-	var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
-	var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
 	var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
 	var rangeddefenders = _.filter(Game.creeps, (creep) => creep.memory.role == 'rangeddefender');
 	
@@ -25,21 +25,17 @@ module.exports.loop = function () {
 	for(var name in spawns){
 		spawn = spawns[name];
 		spawnHarvester.run(spawn);
+		spawnUpgrader.run(spawn);
+		spawnBuilder.run(spawn);
 	}
 	
-    if(upgraders.length < 2) {
-        var newName = 'Upgrader' + Game.time;
-        console.log('Spawning new upgrader: ' + newName);
-		Game.spawns['Spawn1'].spawnCreep( [WORK,CARRY,MOVE],     'StarterUpgrader'+Game.time,     { memory: { role: 'upgrader' , level: 'starter' } } );
-    }
-    
-    else if(builders.length < 3) {
+    /**else if(builders.length < 3) {
         var newName = 'Builder' + Game.time;
         console.log('Spawning new builder: ' + newName);
 		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],     newName,     { memory: { role: 'builder' , level: 4 } } );
-    }
+    }**/
 	
-    else if(repairers.length < 1) {
+    if(repairers.length < 1) {
         var newName = 'Repairer' + Game.time;
         console.log('Spawning new repairer: ' + newName);
 		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],     newName,     { memory: { role: 'repairer' , level: 4 } } );
