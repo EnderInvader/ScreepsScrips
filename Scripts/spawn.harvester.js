@@ -15,17 +15,31 @@ var spawnHarvester = {
 				console.log('Spawning new harvester: ' + newName);
 				spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'harvester' , level:1} } );
 			}
+			else{
+				var success = false;
+				console.log('Max number of Harvesters Level 1, Reached');
+			}
 		}
 		
 		var harvestersLv2 = _.filter(harvesters, (creep) => creep.memory.level == 2);
 		/**Basic Harvester, Level 2**/
-		if (controllerLevel == 2) {
+		else if (controllerLevel == 2) {
 			if(harvestersLv2.length < 3) {
 				var newName = 'BasicHarvester' + Game.time;
 				console.log('Spawning new harvester: ' + newName);
 				spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'harvester' , level:2} } );
 			}
+			else{
+				var success = false;
+				console.log('Max number of Harvesters Level 2, Reached');
+			}
 		}
+		
+		else {
+			var success = false;
+			console.log('Controller Level, Out of Range');
+		}
+		return success;
 	}
 };
 
