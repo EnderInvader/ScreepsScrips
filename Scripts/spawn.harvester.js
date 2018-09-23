@@ -59,4 +59,4 @@ var consoleSpawnHarvester = {
 	}
 };
 
-module.exports = spawnHarvester + consoleSpawnHarvester;
+module.exports = spawnHarvester,consoleSpawnHarvester;
