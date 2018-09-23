@@ -46,7 +46,7 @@ var spawnHarvester = {
 
 var consoleSpawnHarvester = {
 	run: function(spawnName,level) {
-		var spawn = 'Game.' + spawnName;
+		var spawn = _.filter(Game.spawns, (spawn) => spawn.name == spawnName);
 		if (level == 1) {
 			var newName = 'StarterHarvester' + Game.time;
 			console.log('Spawning new harvester: ' + newName);
