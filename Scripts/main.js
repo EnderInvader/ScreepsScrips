@@ -31,7 +31,7 @@ module.exports.loop = function () {
 		spawnUpgrader.run(spawn);
 		}
 		else if(spawn.energy > 200){
-		spawnBuilder.run(spawn);
+		spawnBuilder.spawnBuilder.run(spawn);
 		}
 	}
 	

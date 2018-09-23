@@ -1,3 +1,5 @@
+/**require('spawn.harvester').consoleSpawnHarvester.run('Spawn1',1);**/
+
 var spawnHarvester = {
 
     /** @param {Creep} creep **/

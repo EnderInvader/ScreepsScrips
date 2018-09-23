@@ -29,4 +29,22 @@ var spawnBuilder = {
 	}
 };
 
-module.exports = spawnBuilder;
+var consoleSpawnBuilder = {
+	run: function(spawnName,level) {
+		if (level == 1) {
+			var newName = 'StarterBuilder' + Game.time;
+			console.log('Spawning new builder: ' + newName);
+			Game.spawns[spawnName].spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'builder' , level:1} } );
+		}
+		else if (level == 2) {
+			var newName = 'BasicBuilder' + Game.time;
+			console.log('Spawning new builder: ' + newName);
+			Game.spawns[spawnName].spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'builder' , level:2} } );
+		}
+	}
+};
+
+module.exports = {
+	spawnBuilder,
+	consoleSpawnBuilder
+};
