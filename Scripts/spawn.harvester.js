@@ -50,6 +50,8 @@ var consoleSpawnHarvester = {
 		if (level == 1) {
 			var newName = 'StarterHarvester' + Game.time;
 			console.log('Spawning new harvester: ' + newName);
+			console.log(spawnName);
+			console.log(spawn);
 			/**spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'harvester' , level:1} } );**/
 		}
 		else if (level == 2) {
