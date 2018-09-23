@@ -20,7 +20,7 @@ module.exports.loop = function () {
 	var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
 	var rangeddefenders = _.filter(Game.creeps, (creep) => creep.memory.role == 'rangeddefender');
 	
-	var spawns = _.filter(Game.spawns, (spawn) => spawn.spawning.remaningTime > 0);
+	var spawns = Game.spawns;
 	for(var name in spawns){
 		spawn = spawns[name];
 		spawnHarvester.run(spawn);
