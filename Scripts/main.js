@@ -25,7 +25,7 @@ module.exports.loop = function () {
 	for(var name in spawns){
 		spawn = spawns[name];
 		if(spawn.energy > 200){
-		spawnHarvester.run(spawn);
+		spawnHarvester.spawnHarvester.run(spawn);
 		}
 		else if(spawn.energy > 200){
 		spawnUpgrader.run(spawn);
