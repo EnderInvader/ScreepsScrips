@@ -40,7 +40,7 @@ module.exports.loop = function () {
         console.log('Spawning new builder: ' + newName);
 		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],     newName,     { memory: { role: 'builder' , level: 4 } } );
     }**/
-	
+	if(spawn.energy > 200){
     if(repairers.length < 1) {
         var newName = 'Repairer' + Game.time;
         console.log('Spawning new repairer: ' + newName);
@@ -52,7 +52,7 @@ module.exports.loop = function () {
         var newName = 'RangedDefender' + Game.time;
         console.log('Spawning new ranged defender: ' + newName);
 		Game.spawns['Spawn1'].spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK],     newName,     { memory: { role: 'rangeddefender' , level: 4 } } );
-    }
+}}
     
     if(Game.spawns['Spawn1'].spawning) { 
         var spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning.name];
