@@ -5,6 +5,7 @@ var roleRepairer = require('role.repairer');
 var roleRangedDefender= require('role.rangeddefender');
 var buildingSpawner = require('building.spawner');
 var buildingTower = require('building.tower');
+var spawnHarvester = require('spawn.harvester');
 
 module.exports.loop = function () {
 
