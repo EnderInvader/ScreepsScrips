@@ -10,7 +10,7 @@ var spawnUpgrader = {
 		/**Starter Upgrader, Level 1**/
 		var upgradersLv1 = _.filter(upgraders, (creep) => creep.memory.level == 1);
 		if (controllerLevel == 1) {
-			if(harvestersLv1.length < 1) {
+			if(upgradersLv1.length < 1) {
 				var newName = 'StarterUpgrader' + Game.time;
 				console.log('Spawning new upgrader: ' + newName);
 				spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'upgrader' , level:1} } );
@@ -20,7 +20,7 @@ var spawnUpgrader = {
 		var upgradersLv2 = _.filter(upgraders, (creep) => creep.memory.level == 2);
 		/**Basic Upgrader, Level 2**/
 		if (controllerLevel == 2) {
-			if(harvestersLv2.length < 1) {
+			if(upgradersLv2.length < 1) {
 				var newName = 'BasicUpgrader' + Game.time;
 				console.log('Spawning new upgrader: ' + newName);
 				spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'upgrader' , level:2} } );

@@ -10,7 +10,7 @@ var spawnBuilder = {
 		/**Starter Builder, Level 1**/
 		var buildersLv1 = _.filter(builders, (creep) => creep.memory.level == 1);
 		if (controllerLevel == 1) {
-			if(harvestersLv1.length < 2) {
+			if(buildersLv1.length < 2) {
 				var newName = 'StarterBuilder' + Game.time;
 				console.log('Spawning new builder: ' + newName);
 				spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'builder' , level:1} } );
@@ -20,7 +20,7 @@ var spawnBuilder = {
 		var buildersLv2 = _.filter(builders, (creep) => creep.memory.level == 2);
 		/**Basic Builder, Level 2**/
 		if (controllerLevel == 2) {
-			if(harvestersLv2.length < 3) {
+			if(buildersLv2.length < 3) {
 				var newName = 'BasicBuilder' + Game.time;
 				console.log('Spawning new builder: ' + newName);
 				spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'builder' , level:2} } );
