@@ -26,7 +26,7 @@ module.exports.loop = function () {
 		spawnHarvester.run(spawn);
 	}
 	
-    else if(upgraders.length < 2) {
+    if(upgraders.length < 2) {
         var newName = 'Upgrader' + Game.time;
         console.log('Spawning new upgrader: ' + newName);
 		Game.spawns['Spawn1'].spawnCreep( [WORK,CARRY,MOVE],     'StarterUpgrader'+Game.time,     { memory: { role: 'upgrader' , level: 'starter' } } );
