@@ -15,17 +15,16 @@ module.exports.loop = function () {
         }
     }
 
-    var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
 	var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
 	var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
 	var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
 	var rangeddefenders = _.filter(Game.creeps, (creep) => creep.memory.role == 'rangeddefender');
 	
-    if(harvesters.length < 4) {
-        var newName = 'Harvester' + Game.time;
-        console.log('Spawning new harvester: ' + newName);
-		Game.spawns['Spawn1'].spawnCreep( [WORK,CARRY,MOVE],     'StarterHarvester'+Game.time,     { memory: { role: 'harvester' , level: 'starter' } } );
-    }
+	var spawns = _.filter(Game.spawns, (spawn) => spawn.spawning.remaningTime > 0);
+	for(var name in spawns){
+		spawn = spawns[name];
+		spawnHarvester.run(spawn);
+	}
 	
     else if(upgraders.length < 2) {
         var newName = 'Upgrader' + Game.time;
