@@ -24,14 +24,16 @@ module.exports.loop = function () {
 	var spawns = Game.spawns;
 	for(var name in spawns){
 		spawn = spawns[name];
-		var spawnHarvesters = spawnHarvester.spawnHarvester.run(spawn);
-		console.log(spawnHarvesters);
 		
+		if(spawn.energy > 200) {
+			var spawnHarvesters = spawnHarvester.spawnHarvester.run(spawn);
+			console.log(spawnHarvesters);
+		}
 		if(spawn.energy > 200){
-		spawnUpgrader.run(spawn);
+			spawnUpgrader.run(spawn);
 		}
 		else if(spawn.energy > 200){
-		spawnBuilder.spawnBuilder.run(spawn);
+			spawnBuilder.spawnBuilder.run(spawn);
 		}
 	}
 	
