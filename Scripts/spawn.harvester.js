@@ -12,6 +12,7 @@ var spawnHarvester = {
 		/**Starter Harvester, Level 1**/
 		var harvestersLv1 = _.filter(harvesters, (creep) => creep.memory.level == 1);
 		var harvestersLv2 = _.filter(harvesters, (creep) => creep.memory.level == 2);
+		var success = true;
 		
 		if (controllerLevel == 1) {
 			if(harvestersLv1.length < 3) {
