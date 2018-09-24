@@ -24,10 +24,10 @@ module.exports.loop = function () {
 	var spawns = Game.spawns;
 	for(var name in spawns){
 		spawn = spawns[name];
+		var spawnHarvesters = spawnHarvester.spawnHarvester.run(spawn);
+		console.log(spawnHarvesters);
+		
 		if(spawn.energy > 200){
-		spawnHarvester.spawnHarvester.run(spawn);
-		}
-		else if(spawn.energy > 200){
 		spawnUpgrader.run(spawn);
 		}
 		else if(spawn.energy > 200){
@@ -61,7 +61,7 @@ module.exports.loop = function () {
             Game.spawns['Spawn1'].pos.x + 1, 
             Game.spawns['Spawn1'].pos.y, 
             {align: 'left', opacity: 0.8});
-            Game.spawns['Spawn1'].spawning.setDirections([TOP]);
+            Game.spawns['Spawn1'].spawning.setDirections([TOP_LEFT,TOP_RIGHT,BOTTOM_LEFT,BOTTOM_RIGHT]);
     }
 
     for(var name in Game.creeps) {
