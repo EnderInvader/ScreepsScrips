@@ -1,44 +1,44 @@
-/**require('spawn.harvester').consoleSpawnHarvester.run('Spawn1',1);**/
+/**require('spawn.repairer').consoleSpawnRepairer.run('Spawn1',1);**/
 
-var spawnHarvester = {
+var spawnRepairer = {
 
     /** @param {Creep} creep **/
     run: function(spawn) {	
 	    var room = spawn.room;
 		var controller = room.controller;
 		var controllerLevel = controller.level;
-		var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
+		var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
 		
-		/**Starter Harvester, Level 1**/
-		var harvestersLv1 = _.filter(harvesters, (creep) => creep.memory.level == 1);
-		var harvestersLv2 = _.filter(harvesters, (creep) => creep.memory.level == 2);
+		var repairersLv1 = _.filter(repairers, (creep) => creep.memory.level == 1);
+		var repairersLv2 = _.filter(repairers, (creep) => creep.memory.level == 2);
 		var success = true;
 		var temp = 0;
 		var error = "";
 		
+		/**Starter Repairer, Level 1**/
 		if (controllerLevel == 1) {
-			if(harvestersLv1.length < 3) {
-				var newName = 'StarterHarvester' + Game.time;
-				console.log('Spawning new harvester: ' + newName);
-				var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'harvester' , level:1} } );
+			if(repairersLv1.length < 1) {
+				var newName = 'StarterRepairer' + Game.time;
+				console.log('Spawning new repairer: ' + newName);
+				var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'repairer' , level:1} } );
 			}
 			else{
 				var success = false;
-				var error = 'Max number of Harvesters Level 1, Reached';
+				var error = 'Max number of Repairers Level 1, Reached';
 				var temp = -99;
 			}
 		}
 		
-		/**Basic Harvester, Level 2**/
+		/**Basic Repairer, Level 2**/
 		else if (controllerLevel == 2) {
-			if(harvestersLv2.length < 3) {
-				var newName = 'BasicHarvester' + Game.time;
-				console.log('Spawning new harvester: ' + newName);
-				var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'harvester' , level:2} } );
+			if(repairersLv2.length < 2) {
+				var newName = 'BasicRepairer' + Game.time;
+				console.log('Spawning new repairer: ' + newName);
+				var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'repairer' , level:2} } );
 			}
 			else{
 				var success = false;
-				var error = 'Max number of Harvesters Level 2, Reached';
+				var error = 'Max number of Repairers Level 2, Reached';
 				var temp = -99;
 			}
 		}
@@ -83,28 +83,28 @@ var spawnHarvester = {
 			return success;
 		}
 		else{
-			console.log('Harvester Spawning Error: ' + error);
+			console.log('Repairer Spawning Error: ' + error);
 			return temp;
 		}
 	}
 };
 
-var consoleSpawnHarvester = {
+var consoleSpawnRepairer = {
 	run: function(spawnName,level) {
-		if (level == 1) {
-			var newName = 'StarterHarvester' + Game.time;
-			console.log('Spawning new harvester: ' + newName);
-			Game.spawns[spawnName].spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'harvester' , level:1} } );
+		if(level == 1) {
+			var newName = 'StarterRepairer' + Game.time;
+			console.log('Spawning new repairer: ' + newName);
+			var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'repairer' , level:1} } );
 		}
-		else if (level == 2) {
-			var newName = 'BasicHarvester' + Game.time;
-			console.log('Spawning new harvester: ' + newName);
-			Game.spawns[spawnName].spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'harvester' , level:2} } );
+		else if(level == 2) {
+			var newName = 'BasicRepairer' + Game.time;
+			console.log('Spawning new repairer: ' + newName);
+			var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'repairer' , level:2} } );
 		}
 	}
 };
 
 module.exports = {
-	spawnHarvester,
-	consoleSpawnHarvester
+	spawnRepairer,
+	consoleSpawnRepairer
 };
