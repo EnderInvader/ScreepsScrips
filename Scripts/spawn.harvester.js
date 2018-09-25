@@ -83,7 +83,7 @@ var spawnHarvester = {
 		}
 		else{
 			console.log('Harvester Spawning Error: ' + error);
-			return success;
+			return temp;
 		}
 	}
 };
