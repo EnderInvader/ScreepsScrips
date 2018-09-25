@@ -28,12 +28,13 @@ module.exports.loop = function () {
 		if(spawn.energy > 200) {
 			var spawnHarvesters = spawnHarvester.spawnHarvester.run(spawn);
 			console.log(spawnHarvesters);
-		}
-		if(spawn.energy > 200){
-			spawnUpgrader.run(spawn);
-		}
-		else if(spawn.energy > 200){
-			spawnBuilder.spawnBuilder.run(spawn);
+			
+			if(spawnHarvesters == -99){
+				spawnUpgrader.run(spawn);
+			}
+			if(spawnHarvesters == -99){
+				spawnBuilder.spawnBuilder.run(spawn);
+			}
 		}
 	}
 	

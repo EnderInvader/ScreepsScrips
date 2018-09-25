@@ -25,7 +25,7 @@ var spawnHarvester = {
 			else{
 				var success = false;
 				var error = 'Max number of Harvesters Level 1, Reached';
-				var temp = 99;
+				var temp = -99;
 			}
 		}
 		
@@ -39,6 +39,7 @@ var spawnHarvester = {
 			else{
 				var success = false;
 				var error = 'Max number of Harvesters Level 2, Reached';
+				var temp = -99;
 			}
 		}
 		
