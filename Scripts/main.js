@@ -8,6 +8,9 @@ var buildingTower = require('building.tower');
 var spawnHarvester = require('spawn.harvester');
 var spawnUpgrader = require('spawn.upgrader');
 var spawnBuilder = require('spawn.builder');
+var spawnRepairer = require('spawn.repairer');
+var spawnRangedDefender = require('spawn.rangedDefender');
+var spawnHauler = require('spawn.hauler');
 
 module.exports.loop = function () {
 
@@ -27,13 +30,13 @@ module.exports.loop = function () {
 		
 		if(spawn.energy > 200) {
 			var spawnHarvesters = spawnHarvester.spawnHarvester.run(spawn);
-			console.log(spawnHarvesters);
 			
 			if(spawnHarvesters == -99){
-				spawnUpgrader.run(spawn);
-			}
-			if(spawnHarvesters == -99){
-				spawnBuilder.spawnBuilder.run(spawn);
+				var spawnUpgraders = spawnUpgrader.spawnUpgrader.run(spawn);
+				
+				if(spawnUpgraders == -99){
+					var spawnBuilders = spawnBuilder.spawnBuilder.run(spawn);
+				}
 			}
 		}
 	}
@@ -72,18 +75,21 @@ module.exports.loop = function () {
         if(creep.memory.role == 'harvester') {
             roleHarvester.run(creep);
         }
-        if(creep.memory.role == 'upgrader') {
+        else if(creep.memory.role == 'upgrader') {
             roleUpgrader.run(creep);
         }
-		if(creep.memory.role == 'builder') {
+		else if(creep.memory.role == 'builder') {
             roleBuilder.run(creep);
         }
-		if(creep.memory.role == 'repairer') {
+		else if(creep.memory.role == 'repairer') {
             roleRepairer.run(creep);
         }
-		if(creep.memory.role == 'rangeddefender') {
+		else if(creep.memory.role == 'rangeddefender') {
             roleRangedDefender.run(creep);
         }
+		else {
+			console.log("ERR_ROLE_NOT_FOUND");
+		}
     }
 	
 	for(var name in Game.spawns) {

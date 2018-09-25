@@ -1,3 +1,5 @@
+/**require('spawn.builder').consoleSpawnBuilder.run('Spawn1',1);**/
+
 var spawnBuilder = {
 
     /** @param {Creep} creep **/
@@ -7,24 +9,82 @@ var spawnBuilder = {
 		var controllerLevel = controller.level;
 		var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
 		
-		/**Starter Builder, Level 1**/
 		var buildersLv1 = _.filter(builders, (creep) => creep.memory.level == 1);
+		var buildersLv2 = _.filter(builders, (creep) => creep.memory.level == 2);
+		var success = true;
+		var temp = 0;
+		var error = "";
+		
+		/**Starter Builder, Level 1**/
 		if (controllerLevel == 1) {
 			if(buildersLv1.length < 2) {
 				var newName = 'StarterBuilder' + Game.time;
 				console.log('Spawning new builder: ' + newName);
-				spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'builder' , level:1} } );
+				var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'builder' , level:1} } );
+			}
+			else{
+				var success = false;
+				var error = 'Max number of Builders Level 1, Reached';
+				var temp = -99;
 			}
 		}
 		
-		var buildersLv2 = _.filter(builders, (creep) => creep.memory.level == 2);
 		/**Basic Builder, Level 2**/
-		if (controllerLevel == 2) {
+		else if (controllerLevel == 2) {
 			if(buildersLv2.length < 3) {
 				var newName = 'BasicBuilder' + Game.time;
 				console.log('Spawning new builder: ' + newName);
-				spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'builder' , level:2} } );
+				var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'builder' , level:2} } );
 			}
+			else{
+				var success = false;
+				var error = 'Max number of Builders Level 2, Reached';
+				var temp = -99;
+			}
+		}
+		
+		else {
+			var success = false;
+			console.log('Controller Level, Out of Range');
+		}
+		
+		if(temp == 0){
+			var success = true;
+		}
+		else if(temp == -1){
+			var success = false;
+			var error = "ERR_NOT_OWNER";
+		}
+		else if(temp == -3){
+			var success = false;
+			var error = "ERR_NAME_EXISTS";
+		}
+		else if(temp == -4){
+			var success = false;
+			var error = "ERR_BUSY";
+		}
+		else if(temp == -6){
+			var success = false;
+			var error = "ERR_NOT_ENOUGH_ENERGY";
+		}
+		else if(temp == -10){
+			var success = false;
+			var error = "ERR_INVALID_ARGS";
+		}
+		else if(temp == -14){
+			var success = false;
+			var error = "ERR_RCL_NOT_ENOUGH";
+		}
+		else{
+			var success = false;
+		}
+		
+		if(success == true){
+			return success;
+		}
+		else{
+			console.log('Builder Spawning Error: ' + error);
+			return temp;
 		}
 	}
 };

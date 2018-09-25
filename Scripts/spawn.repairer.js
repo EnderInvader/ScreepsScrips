@@ -9,13 +9,13 @@ var spawnHarvester = {
 		var controllerLevel = controller.level;
 		var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
 		
+		/**Starter Harvester, Level 1**/
 		var harvestersLv1 = _.filter(harvesters, (creep) => creep.memory.level == 1);
 		var harvestersLv2 = _.filter(harvesters, (creep) => creep.memory.level == 2);
 		var success = true;
 		var temp = 0;
 		var error = "";
 		
-		/**Starter Harvester, Level 1**/
 		if (controllerLevel == 1) {
 			if(harvestersLv1.length < 3) {
 				var newName = 'StarterHarvester' + Game.time;
