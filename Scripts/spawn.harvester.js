@@ -16,7 +16,7 @@ var spawnHarvester = {
 		var error = "";
 		
 		/**Starter Harvester, Level 1**/
-		if (controllerLevel == 1) {
+		if (controllerLevel == 1 || harvestersLv2.length == 0) {
 			if(harvestersLv1.length < 3) {
 				var newName = 'StarterHarvester' + Game.time;
 				console.log('Spawning new harvester: ' + newName);
