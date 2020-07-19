@@ -1,0 +1,31 @@
+Game.spawns['Spawn1'].room.energyCapacityAvailable;
+
+Total Energy Capacity
+Level 1 - 300
+Level 2 - 550
+Level 3 - 800
+Level 4 - 1300
+Level 5 - 1800
+Level 6 - 2300
+Level 7 - 5300
+Level 8 - 12300
+
+Highest Priced Creep
+Level 1 - 200
+Level 2 - 450
+Level 3 - 650
+Level 4 - 
+Level 5 - 
+Level 6 - 
+Level 7 - 
+Level 8 - 
+
+
+
+
+TODO:
+targeted room attack
+long distance mining
+place two claim parts on claimer bot
+auto recycle
+autospawning of claimers

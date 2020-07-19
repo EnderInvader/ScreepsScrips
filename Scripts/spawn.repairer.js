@@ -15,8 +15,10 @@ var spawnRepairer = {
 		var temp = 0;
 		var error = "";
 		
+		var Slevel = 2;
+		
 		/**Starter Repairer, Level 1**/
-		if (controllerLevel == 1) {
+		if (Slevel == 1) {
 			if(repairersLv1.length < 1) {
 				var newName = 'StarterRepairer' + Game.time;
 				console.log('Spawning new repairer: ' + newName);
@@ -30,8 +32,8 @@ var spawnRepairer = {
 		}
 		
 		/**Basic Repairer, Level 2**/
-		else if (controllerLevel == 2) {
-			if(repairersLv2.length < 2) {
+		else if (Slevel == 2) {
+			if(repairersLv2.length < 1) {
 				var newName = 'BasicRepairer' + Game.time;
 				console.log('Spawning new repairer: ' + newName);
 				var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'repairer' , level:2} } );
@@ -83,7 +85,7 @@ var spawnRepairer = {
 			return success;
 		}
 		else{
-			console.log('Repairer Spawning Error: ' + error);
+			//console.log('Repairer Spawning Error: ' + error);
 			return temp;
 		}
 	}

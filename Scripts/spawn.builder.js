@@ -15,12 +15,14 @@ var spawnBuilder = {
 		var temp = 0;
 		var error = "";
 		
-		/**Starter Builder, Level 1**/
-		if (controllerLevel == 1) {
+		var Slevel = 2;
+		
+		/**Starter Builder, Level 1**///300
+		if (Slevel == 1) {
 			if(buildersLv1.length < 2) {
 				var newName = 'StarterBuilder' + Game.time;
 				console.log('Spawning new builder: ' + newName);
-				var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'builder' , level:1} } );
+				var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'builder' , level:1} } );//200
 			}
 			else{
 				var success = false;
@@ -29,16 +31,18 @@ var spawnBuilder = {
 			}
 		}
 		
-		/**Basic Builder, Level 2**/
-		else if (controllerLevel == 2) {
-			if(buildersLv2.length < 3) {
-				var newName = 'BasicBuilder' + Game.time;
-				console.log('Spawning new builder: ' + newName);
-				var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'builder' , level:2} } );
+		/**Basic Builder, Level 2**///550
+		else if (Slevel == 2) {
+			if(buildersLv2.length < 2) {
+			    if(room.energyAvailable >= 450) {
+				    var newName = 'BasicBuilder' + Game.time;
+				    console.log('Spawning new builder: ' + newName);
+				    var temp = spawn.spawnCreep( [WORK,WORK,CARRY,CARRY,MOVE,MOVE],newName,{ memory: { role: 'builder' , level:2} } );//400
+			    }
 			}
 			else{
 				var success = false;
-				var error = 'Max number of Builders Level 2, Reached';
+				//var error = 'Max number of Builders Level 2, Reached';
 				var temp = -99;
 			}
 		}
@@ -83,7 +87,7 @@ var spawnBuilder = {
 			return success;
 		}
 		else{
-			console.log('Builder Spawning Error: ' + error);
+			//console.log('Builder Spawning Error: ' + error);
 			return temp;
 		}
 	}

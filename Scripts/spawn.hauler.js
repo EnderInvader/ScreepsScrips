@@ -9,36 +9,38 @@ var spawnHauler = {
 		var controllerLevel = controller.level;
 		var haulers = _.filter(Game.creeps, (creep) => creep.memory.role == 'hauler');
 		
-		var haulersLv1 = _.filter(haulers, (creep) => creep.memory.level == 1);
 		var haulersLv2 = _.filter(haulers, (creep) => creep.memory.level == 2);
+		var haulersLv3 = _.filter(haulers, (creep) => creep.memory.level == 2);
 		var success = true;
 		var temp = 0;
 		var error = "";
 		
-		/**Starter Hauler, Level 1**/
-		if (controllerLevel == 1) {
-			if(haulersLv1.length < 1) {
-				var newName = 'StarterHauler' + Game.time;
-				console.log('Spawning new hauler: ' + newName);
-				var temp = spawn.spawnCreep( [CARRY,CARRY,MOVE,MOVE],newName,{ memory: { role: 'hauler' , level:1} } );
-			}
-			else{
-				var success = false;
-				var error = 'Max number of Haulers Level 1, Reached';
-				var temp = -99;
-			}
-		}
+		var Slevel = 2;
 		
-		/**Basic Hauler, Level 2**/
-		else if (controllerLevel == 2) {
-			if(haulersLv2.length < 2) {
+		/**Starter Hauler, Level 2**/
+		if (Slevel == 2) {
+			if(haulersLv2.length < 1) {
 				var newName = 'BasicHauler' + Game.time;
 				console.log('Spawning new hauler: ' + newName);
-				var temp = spawn.spawnCreep( [CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'hauler' , level:2} } );
+				var temp = spawn.spawnCreep( [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE],newName,{ memory: { role: 'hauler' , level:2} } );
 			}
 			else{
 				var success = false;
 				var error = 'Max number of Haulers Level 2, Reached';
+				var temp = -99;
+			}
+		}
+		
+		/**Basic Hauler, Level 3**/
+		else if (Slevel == 3) {
+			if(haulersLv2.length < 2) {
+				var newName = 'NormalHauler' + Game.time;
+				console.log('Spawning new hauler: ' + newName);
+				var temp = spawn.spawnCreep( [CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'hauler' , level:3} } );
+			}
+			else{
+				var success = false;
+				var error = 'Max number of Haulers Level 3, Reached';
 				var temp = -99;
 			}
 		}
@@ -83,7 +85,7 @@ var spawnHauler = {
 			return success;
 		}
 		else{
-			console.log('Hauler Spawning Error: ' + error);
+			//console.log('Hauler Spawning Error: ' + error);
 			return temp;
 		}
 	}

@@ -1,7 +1,7 @@
 var roleRangedDefender = {
 
     //TOWER CODE
-    run: function(rangeddefender) {
+    run: function(rangeddefender, controllerlevel) {
 
 		var myRoomName = rangeddefender.room
         var target = rangeddefender.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
@@ -19,11 +19,19 @@ var roleRangedDefender = {
 		else {
 			creep.moveTo(Game.flags.IdleDefenders);
 		}
+
 		
-		if(creep.memory.level != 'starter') {
-			if(creep.ticksToLive <= 1000) {
+		
+		if(creep.memory.level >= controllerlevel - 1) {
+			if(creep.ticksToLive <= 600 || creep.memory.renewing) {
+			    creep.memory.renewing = true;
 				creep.cancelOrder('move');
-				creep.moveTo(Game.spawns['Spawn1'])
+				creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#00ff00'}})
+				creep.say('renew');
+			}
+			if(creep.memory.renewing && creep.ticksToLive >= 1400)
+			{
+			    creep.memory.renewing = false;
 			}
 		}
 	}

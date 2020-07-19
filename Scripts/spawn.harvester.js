@@ -15,12 +15,14 @@ var spawnHarvester = {
 		var temp = 0;
 		var error = "";
 		
-		/**Starter Harvester, Level 1**/
-		if (controllerLevel == 1) {
-			if(harvestersLv1.length < 3) {
+		var Slevel = 2;
+		
+		/**Starter Harvester, Level 1**///300
+		if (Slevel == 1) {//controllerLevel == 1
+			if(harvestersLv1.length < 2) {
 				var newName = 'StarterHarvester' + Game.time;
 				console.log('Spawning new harvester: ' + newName);
-				var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'harvester' , level:1} } );
+				var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'harvester' , level:1} } );//200
 			}
 			else{
 				var success = false;
@@ -29,12 +31,18 @@ var spawnHarvester = {
 			}
 		}
 		
-		/**Basic Harvester, Level 2**/
-		else if (controllerLevel == 2) {
+		/**Basic Harvester, Level 2**///550
+		else if (Slevel == 2) {
 			if(harvestersLv2.length < 3) {
-				var newName = 'BasicHarvester' + Game.time;
-				console.log('Spawning new harvester: ' + newName);
-				var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'harvester' , level:2} } );
+			    if(room.energyAvailable >= 450) {
+				    var newName = 'BasicHarvester' + Game.time;
+				    console.log('Spawning new harvester: ' + newName);
+				    var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'harvester' , level:2} } );//450
+			    }
+			    else
+			    {
+			        //console.log(room.energyAvailable)
+			    }
 			}
 			else{
 				var success = false;
@@ -83,7 +91,7 @@ var spawnHarvester = {
 			return success;
 		}
 		else{
-			console.log('Harvester Spawning Error: ' + error);
+			//console.log('Harvester Spawning Error: ' + error);
 			return temp;
 		}
 	}

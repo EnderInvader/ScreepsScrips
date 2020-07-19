@@ -1,4 +1,4 @@
-var roleHarvester = {
+var roleCHarvester = {
 
     /** @param {Creep} creep **/
     run: function(creep, controllerlevel) {	
@@ -18,12 +18,14 @@ var roleHarvester = {
         
 	    if(creep.memory.despositing) {
 	        var targets = creep.room.find(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_EXTENSION ||
-                                structure.structureType == STRUCTURE_SPAWN) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
-                    }
-	        });
-	        if(targets.length > 0) {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_CONTAINER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                }
+            });
+            if(targets.length > 0) {
+                targets.sort(function (a, b) {
+                    return creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b);
+                });
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
@@ -31,50 +33,24 @@ var roleHarvester = {
             else
             {
                 var targets = creep.room.find(FIND_STRUCTURES, {
-                        filter: (structure) => {
-                            return (structure.structureType == STRUCTURE_CONTAINER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
-                        }
-	            });
-	            if(targets.length > 0) {
-	                targets.sort(function (a, b) {
-                        return creep.pos.getRangeTo(a) - creep.pos.getRangeTo(a);
-                    });
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_STORAGE) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                    }
+                });
+                if(targets.length > 0) {
                     if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                     }
                 }
-                else
-            {
-                    var targets = creep.room.find(FIND_STRUCTURES, {
-                        filter: (structure) => {
-                            return (structure.structureType == STRUCTURE_TOWER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
-                        }
-	                });
-	                if(targets.length > 0) {
-	                    targets.sort(function (a, b) {
-                            return creep.pos.getRangeTo(a) - creep.pos.getRangeTo(a);
-                        });
-                        if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
-                        }
+                else 
+                {
+                    if(controllerlevel == 1){
+                        var roleBuilder = require('role.builder');
+		                roleBuilder.run(creep);
                     }
-                    else
-                    {
-                        var targets = creep.room.find(FIND_STRUCTURES, {
-                            filter: (structure) => {
-                                return (structure.structureType == STRUCTURE_STORAGE) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
-                            }
-	                    });
-	                    if(targets.length > 0) {
-                            if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                                creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
-                            }
-                        }
-                        else 
-	                    {
-	                        creep.say('all full')
-	                        creep.moveTo(Game.flags.IdleCreeps, {visualizePathStyle: {stroke: '#ffffff'}});
-	                    }
+                    else {
+                        creep.say('all full')
+                        creep.moveTo(Game.flags.IdleCreeps, {visualizePathStyle: {stroke: '#ffffff'}});
                     }
                 }
             }
@@ -146,4 +122,4 @@ var roleHarvester = {
 		}*/
 	}
 };
-module.exports = roleHarvester;
+module.exports = roleCHarvester;

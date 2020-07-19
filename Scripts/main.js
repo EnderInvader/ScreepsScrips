@@ -2,7 +2,8 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
-var roleRangedDefender= require('role.rangeddefender');
+var roleRangedDefender = require('role.rangeddefender');
+var roleHauler = require('role.hauler');
 var buildingSpawner = require('building.spawner');
 var buildingTower = require('building.tower');
 var spawnHarvester = require('spawn.harvester');
@@ -32,16 +33,16 @@ module.exports.loop = function () {
 			var spawnHarvesters = spawnHarvester.spawnHarvester.run(spawn);
 			
 			if(spawnHarvesters == -99){
-				var spawnUpgraders = spawnUpgrader.spawnUpgrader.run(spawn);
+			    var spawnBuilders = spawnBuilder.spawnBuilder.run(spawn);
 				
-				if(spawnUpgraders == -99){
-					var spawnBuilders = spawnBuilder.spawnBuilder.run(spawn);
+				if(spawnBuilders == -99){
+				    var spawnRepairers = spawnRepairer.spawnRepairer.run(spawn);
 					
-					if(spawnBuilders == -99){
-						var spawnRepairers = spawnRepairer.spawnRepairer.run(spawn);
+					if(spawnRepairers == -99){
+					    var spawnHaulers = spawnHauler.spawnHauler.run(spawn);
 						
-							if(spawnRepairers == -99){
-								var spawnHaulers = spawnHauler.spawnHauler.run(spawn);
+							if(spawnHaulers == -99){
+								var spawnUpgraders = spawnUpgrader.spawnUpgrader.run(spawn);
 							}
 					}
 				}
@@ -80,20 +81,25 @@ module.exports.loop = function () {
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
+        var controllerlevel = creep.room.controller.level;
+        
         if(creep.memory.role == 'harvester') {
-            roleHarvester.run(creep);
+            roleHarvester.run(creep, controllerlevel);
         }
         else if(creep.memory.role == 'upgrader') {
-            roleUpgrader.run(creep);
+            roleUpgrader.run(creep, controllerlevel);
         }
 		else if(creep.memory.role == 'builder') {
-            roleBuilder.run(creep);
+            roleBuilder.run(creep, controllerlevel);
         }
 		else if(creep.memory.role == 'repairer') {
-            roleRepairer.run(creep);
+            roleRepairer.run(creep, controllerlevel);
         }
 		else if(creep.memory.role == 'rangeddefender') {
-            roleRangedDefender.run(creep);
+            roleRangedDefender.run(creep, controllerlevel);
+        }
+        else if(creep.memory.role == 'hauler') {
+            roleHauler.run(creep, controllerlevel);
         }
 		else {
 			console.log("ERR_ROLE_NOT_FOUND");
@@ -103,8 +109,30 @@ module.exports.loop = function () {
 	for(var name in Game.spawns) {
 		var spawn = Game.spawns[name];
         buildingSpawner.run(spawn);
-		//var roomName = Game.spawns[name].room;
-		//console.log(roomName);
-        //buildingTower.run();
+    }
+    
+    for(var name in Game.structures) {
+		var tower = Game.structures[name];
+        if(tower.structureType == STRUCTURE_TOWER){
+            buildingTower.run(tower);
+        }
     }
 }
+
+/**
+Trail Colors
+Red (ff0000) Destroy Structure
+Orange (ff8000) 
+Yellow (ffff00)
+Light Green (80ff00)
+Green (00ff00)
+Green Blue (00ff80)
+Cyan (00ffff)
+Light Blue (0080ff)
+Blue (0000ff)
+Purple (8000ff)
+Pink (ff00ff)
+Hot Pink (ff0080) Attack
+White (ffffff)
+Black (000000)
+**/

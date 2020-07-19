@@ -15,8 +15,10 @@ var spawnUpgrader = {
 		var temp = 0;
 		var error = "";
 		
+		var Slevel = 2;
+		
 		/**Starter Upgrader, Level 1**/
-		if (controllerLevel == 1) {
+		if (Slevel == 1) {
 			if(upgradersLv1.length < 1) {
 				var newName = 'StarterUpgrader' + Game.time;
 				console.log('Spawning new upgrader: ' + newName);
@@ -30,8 +32,8 @@ var spawnUpgrader = {
 		}
 		
 		/**Basic Upgrader, Level 2**/
-		else if (controllerLevel == 2) {
-			if(upgradersLv2.length < 1) {
+		else if (Slevel == 2) {
+			if(upgradersLv2.length < 2) {
 				var newName = 'BasicUpgrader' + Game.time;
 				console.log('Spawning new upgrader: ' + newName);
 				var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'upgrader' , level:2} } );
@@ -83,7 +85,7 @@ var spawnUpgrader = {
 			return success;
 		}
 		else{
-			console.log('Upgrader Spawning Error: ' + error);
+			//console.log('Upgrader Spawning Error: ' + error);
 			return temp;
 		}
 	}
