@@ -3,7 +3,7 @@
 var spawnUpgrader = {
 
     /** @param {Creep} creep **/
-    run: function(spawn) {	
+    run: function(spawn, Slevel) {	
 	    var room = spawn.room;
 		var controller = room.controller;
 		var controllerLevel = controller.level;
@@ -15,14 +15,24 @@ var spawnUpgrader = {
 		var temp = 0;
 		var error = "";
 		
-		var Slevel = 2;
+		var OSlevel = 0;
+		
+		if (OSlevel != 0){
+		    Slevel = OSlevel;
+		}
 		
 		/**Starter Upgrader, Level 1**/
 		if (Slevel == 1) {
 			if(upgradersLv1.length < 1) {
-				var newName = 'StarterUpgrader' + Game.time;
-				console.log('Spawning new upgrader: ' + newName);
-				var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'upgrader' , level:1} } );
+			    if(room.energyAvailable >= 250) {
+				    var newName = 'StarterUpgrader' + Game.time;
+				    console.log('Spawning new upgrader: ' + newName);
+				    var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'upgrader' , level:1} } );//200
+			    }
+			    else
+			    {
+			        //console.log(room.energyAvailable)
+			    }
 			}
 			else{
 				var success = false;
@@ -32,11 +42,17 @@ var spawnUpgrader = {
 		}
 		
 		/**Basic Upgrader, Level 2**/
-		else if (Slevel == 2) {
+		else if (Slevel == 2 || Slevel == 3) {
 			if(upgradersLv2.length < 2) {
-				var newName = 'BasicUpgrader' + Game.time;
-				console.log('Spawning new upgrader: ' + newName);
-				var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'upgrader' , level:2} } );
+			    if(room.energyAvailable >= 500) {
+				    var newName = 'BasicUpgrader' + Game.time;
+				    console.log('Spawning new upgrader: ' + newName);
+				    var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'upgrader' , level:2} } );//450
+			    }
+			    else
+			    {
+			        //console.log(room.energyAvailable)
+			    }
 			}
 			else{
 				var success = false;
@@ -47,7 +63,7 @@ var spawnUpgrader = {
 		
 		else {
 			var success = false;
-			console.log('Controller Level, Out of Range');
+			console.log('Controller Level, Out of Range, Upgrader');
 		}
 		
 		if(temp == 0){

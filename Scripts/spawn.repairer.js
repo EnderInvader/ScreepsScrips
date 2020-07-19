@@ -3,7 +3,7 @@
 var spawnRepairer = {
 
     /** @param {Creep} creep **/
-    run: function(spawn) {	
+    run: function(spawn, Slevel) {	
 	    var room = spawn.room;
 		var controller = room.controller;
 		var controllerLevel = controller.level;
@@ -11,18 +11,25 @@ var spawnRepairer = {
 		
 		var repairersLv1 = _.filter(repairers, (creep) => creep.memory.level == 1);
 		var repairersLv2 = _.filter(repairers, (creep) => creep.memory.level == 2);
+		var repairersLv3 = _.filter(repairers, (creep) => creep.memory.level == 3);
 		var success = true;
 		var temp = 0;
 		var error = "";
 		
-		var Slevel = 2;
+		var OSlevel = 0;
 		
-		/**Starter Repairer, Level 1**/
+		if (OSlevel != 0){
+		    Slevel = OSlevel;
+		}
+		
+		/**Starter Repairer, Level 1**///300
 		if (Slevel == 1) {
 			if(repairersLv1.length < 1) {
-				var newName = 'StarterRepairer' + Game.time;
-				console.log('Spawning new repairer: ' + newName);
-				var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'repairer' , level:1} } );
+			    if(room.energyAvailable >= 250) {
+				    var newName = 'StarterRepairer' + Game.time;
+				    console.log('Spawning new repairer: ' + newName);
+				    var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'repairer' , level:1} } );//200
+			    }
 			}
 			else{
 				var success = false;
@@ -31,12 +38,14 @@ var spawnRepairer = {
 			}
 		}
 		
-		/**Basic Repairer, Level 2**/
+		/**Basic Repairer, Level 2**///550
 		else if (Slevel == 2) {
 			if(repairersLv2.length < 1) {
-				var newName = 'BasicRepairer' + Game.time;
-				console.log('Spawning new repairer: ' + newName);
-				var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'repairer' , level:2} } );
+			    if(room.energyAvailable >= 500) {
+				    var newName = 'BasicRepairer' + Game.time;
+				    console.log('Spawning new repairer: ' + newName);
+				    var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'repairer' , level:2} } );//450
+			    }
 			}
 			else{
 				var success = false;
@@ -45,9 +54,25 @@ var spawnRepairer = {
 			}
 		}
 		
+		/**Basic Repairer, Level 3**///800
+		else if (Slevel == 3) {
+			if(repairersLv3.length < 2) {
+			    if(room.energyAvailable >= 650) {
+				    var newName = 'AdvancedRepairer' + Game.time;
+				    console.log('Spawning new repairer: ' + newName);
+				    var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE],newName,{ memory: { role: 'repairer' , level:3} } );//600
+			    }
+			}
+			else{
+				var success = false;
+				var error = 'Max number of Repairers Level 3, Reached';
+				var temp = -99;
+			}
+		}
+		
 		else {
 			var success = false;
-			console.log('Controller Level, Out of Range');
+			console.log('Controller Level, Out of Range, Repairer');
 		}
 		
 		if(temp == 0){

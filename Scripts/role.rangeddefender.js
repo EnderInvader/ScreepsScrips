@@ -10,11 +10,12 @@ var roleRangedDefender = {
         //if there are hostiles - attakc them    
         if(target) {
             var username = target.owner.username;
-            Game.notify(`User ${username} spotted in room ${myRoomName}`);
+            var name = target.name;
+            Game.notify(`User ${username} with creep ${name} spotted in room ${myRoomName.name}`);
             if(creep.rangedAttack(target) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, {visualizePathStyle: {stroke: '#ff0000'}});
+                creep.moveTo(target, {visualizePathStyle: {stroke: '#8000ff'}});
             }
-            console.log("ALERT!!!! WE ARE UNDER ATTACK!!!!! ALERT!!!! WE ARE UNDER ATTACK!!!!! ALERT!!!! WE ARE UNDER ATTACK!!!!! ALERT!!!! WE ARE UNDER ATTACK!!!!! ");
+            console.log("ALERT!!!! WE ARE UNDER ATTACK!!!!!");
         }
 		else {
 			creep.moveTo(Game.flags.IdleDefenders);
@@ -22,7 +23,7 @@ var roleRangedDefender = {
 
 		
 		
-		if(creep.memory.level >= controllerlevel - 1) {
+		if(true) {//creep.memory.level >= controllerlevel - 1
 			if(creep.ticksToLive <= 600 || creep.memory.renewing) {
 			    creep.memory.renewing = true;
 				creep.cancelOrder('move');
@@ -33,7 +34,7 @@ var roleRangedDefender = {
 			{
 			    creep.memory.renewing = false;
 			}
-		}
+		}	
 	}
 };
 

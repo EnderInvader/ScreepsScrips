@@ -14,10 +14,12 @@ var roleRepairer = {
 	    if(creep.memory.repairing) {
 	        var targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
-                        return (structure.structureType != STRUCTURE_SPAWN) && structure.hits < structure.hitsMax;
+                        return structure.hits < structure.hitsMax;
                     }
             });
-			targets.sort((a,b) => a.hits - b.hits);
+			targets.sort(function (a, b) {
+                return creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b);
+            });
 			if(targets.length > 0) {
 				if(creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
 					creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
@@ -50,8 +52,7 @@ var roleRepairer = {
         }
 		
 		
-		
-		if(creep.memory.level >= controllerlevel - 1) {
+		if(creep.memory.level > 1) {//creep.memory.level >= controllerlevel - 1
 			if(creep.ticksToLive <= 600 || creep.memory.renewing) {
 			    creep.memory.renewing = true;
 				creep.cancelOrder('move');

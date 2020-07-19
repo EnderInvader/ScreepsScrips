@@ -21,7 +21,7 @@ var roleHauler = {
 	        });
 	        if(targets.length > 0) {
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(targets[0], {reusePath: 10, visualizePathStyle: {stroke: '#ffff00'}});
                 }
             }
             else
@@ -34,7 +34,7 @@ var roleHauler = {
 	            });
 	            if(targets.length > 0) {
                     if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                        creep.moveTo(targets[0], {reusePath: 10, visualizePathStyle: {stroke: '#ffff00'}});
                     }
                 }
             }
@@ -48,7 +48,7 @@ var roleHauler = {
 	            creep.say("tombstone");
 	            creep.room.find(FIND_TOMBSTONES).forEach(tombstone => {
                     if(creep.withdraw(tombstone, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(tombstone, {visualizePathStyle: {stroke: '#ff0000'}});
+                        creep.moveTo(tombstone, {reusePath: 10, visualizePathStyle: {stroke: '#ff0000'}});
                     }  
                 });
 	        }
@@ -60,44 +60,46 @@ var roleHauler = {
 	            creep.say("dropped");
 	            creep.room.find(FIND_DROPPED_RESOURCES).forEach(resourceDrop => {
                     if(creep.pickup(resourceDrop) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(resourceDrop, {visualizePathStyle: {stroke: '#ff0000'}});
+                        creep.moveTo(resourceDrop, {reusePath: 10, visualizePathStyle: {stroke: '#ff0000'}});
                     }
                 });
 	        }
 	        else if(creep.room.find(FIND_RUINS, {
                 filter: (structure) => {
-                    return structure.store[RESOURCE_ENERGY] > 0 && structure.my == true
+                    return structure.store[RESOURCE_ENERGY] > 0
                 }
             }).length){
 	            creep.say("ruins");
 	            creep.room.find(FIND_RUINS).forEach(ruins => {
                     //creep.say(creep.withdraw(ruins, RESOURCE_ENERGY));
                     if(creep.withdraw(ruins, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(ruins, {visualizePathStyle: {stroke: '#ff0000'}});
+                        creep.moveTo(ruins, {reusePath: 10, visualizePathStyle: {stroke: '#ff0000'}});
                     } 
                 });
 	        }
 	        else
 	        {
-	            //creep.say("none");
+	            
+	            
+	            
 	            if(creep.store[RESOURCE_ENERGY] > 0){
 	                creep.memory.despositing = true;
 	                creep.say('deposit');
 	            }
 	            else 
 	            {
-	                creep.moveTo(Game.flags.IdleCreeps, {visualizePathStyle: {stroke: '#ffffff'}});
+	                creep.moveTo(Game.flags.IdleCreeps, {reusePath: 20, visualizePathStyle: {stroke: '#ffffff'}});
 	            }
 	        }
 	    }
 
 		
 		
-		if(creep.memory.level >= controllerlevel - 1) {
+		if(true) {//creep.memory.level >= controllerlevel - 1
 			if(creep.ticksToLive <= 600 || creep.memory.renewing) {
 			    creep.memory.renewing = true;
 				creep.cancelOrder('move');
-				creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#00ff00'}})
+				creep.moveTo(Game.spawns['Spawn1'], {reusePath: 20, visualizePathStyle: {stroke: '#00ff00'}})
 				creep.say('renew');
 			}
 			if(creep.memory.renewing && creep.ticksToLive >= 1400)

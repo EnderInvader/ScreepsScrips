@@ -15,10 +15,10 @@ var roleBuilder = {
 	        var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
             if(targets.length) {
                 targets.sort(function (a, b) {
-                    return creep.pos.getRangeTo(a) - creep.pos.getRangeTo(a);
+                    return creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b);
                 });
                 if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#0080ff'}});
                 }
             }
             else {
@@ -50,6 +50,9 @@ var roleBuilder = {
                             structure.structureType == STRUCTURE_CONTAINER) && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0
                     }
 	        });
+	        targets.sort(function (a, b) {
+                return creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b);
+            });
 	        if(targets.length > 0) {
                 if(creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
@@ -57,7 +60,10 @@ var roleBuilder = {
             }
             else 
             {
-                var sources = creep.room.find(FIND_SOURCES);
+                var sources = creep.room.find(FIND_SOURCES_ACTIVE);
+                sources.sort(function (a, b) {
+                    return creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b);
+                });
                 if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
@@ -67,7 +73,7 @@ var roleBuilder = {
 
 		
 		
-		if(creep.memory.level >= controllerlevel - 1) {
+		if(creep.memory.level > 1) {//creep.memory.level >= controllerlevel
 			if(creep.ticksToLive <= 600 || creep.memory.renewing) {
 			    creep.memory.renewing = true;
 				creep.cancelOrder('move');

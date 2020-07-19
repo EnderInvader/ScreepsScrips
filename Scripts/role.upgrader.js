@@ -12,7 +12,14 @@ var roleUpgrader = {
 	    }
 
 	    if(creep.memory.upgrading) {
-            if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+	        var signText = "no touchy";
+	        if(creep.room.controller.sign.text != signText) {
+	            if(creep.signController(creep.room.controller, signText) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
+                }
+	        }
+	        
+            else if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
@@ -23,14 +30,20 @@ var roleUpgrader = {
                             structure.structureType == STRUCTURE_CONTAINER) && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0
                 }
 	        });
-	        if(targets.length > 0) {
+	        targets.sort(function (a, b) {
+                return creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b);
+            });
+	        if(false) {//targets.length > 0
                 if(creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
             else 
             {
-                var sources = creep.room.find(FIND_SOURCES);
+                var sources = creep.room.find(FIND_SOURCES_ACTIVE);
+                sources.sort(function (a, b) {
+                    return creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b);
+                });
                 if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
@@ -39,7 +52,7 @@ var roleUpgrader = {
 		
 		
 		
-		if(creep.memory.level >= controllerlevel - 1) {
+		if(creep.memory.level > 1) {//creep.memory.level >= controllerlevel - 1
 			if(creep.ticksToLive <= 600 || creep.memory.renewing) {
 			    creep.memory.renewing = true;
 				creep.cancelOrder('move');

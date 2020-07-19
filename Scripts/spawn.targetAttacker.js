@@ -121,24 +121,24 @@ var spawnTargetAttacker = {
 };
 
 var consoleSpawnTargetAttacker = {
-	run: function(spawnName, level, targetRoom, targetEnemy) {
+	run: function(spawnName, level, targetRoom) {
 	    if (Game.map.describeExits(targetRoom) == null) {
 	        console.log("Error: Room not Found");
 	    }
 	    else {
 	        
 	        if (level == 1) {//550
-	            var newName = 'TargetAttacker' + targetRoom + '' + Game.time;
+	            var newName = 'UnarmoredClaimer' + targetRoom + '' + Game.time;
 			    console.log('Spawning new claimer: ' + newName + '   Target: ' + targetRoom);
-			    Game.spawns[spawnName].spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,RANGED_ATTACK,RANGED_ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:3, target: targetRoom, claimState: 0} } );//760
+			    Game.spawns[spawnName].spawnCreep( [CLAIM,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:3, target: targetRoom, claimState: 0} } );//700
 		    }
 		    else if (level == 2) {//800
-		        var newName = 'TargetAttacker' + targetRoom + '' + Game.time;
+		        var newName = 'Claimer' + targetRoom + '' + Game.time;
 			    console.log('Spawning new claimer: ' + newName + '   Target: ' + targetRoom);
 			    Game.spawns[spawnName].spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,CLAIM,MOVE,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:4, target: targetRoom, claimState: 0} } );//800
             }
 		    else if (level == 3) {//1300
-		        var newName = 'TargetAttacker' + targetRoom + '' + Game.time;
+		        var newName = 'AdvancedClaimer' + targetRoom + '' + Game.time;
 			    console.log('Spawning new claimer: ' + newName + '   Target: ' + targetRoom);
 			    Game.spawns[spawnName].spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,CLAIM,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:5, target: targetRoom, claimState: 0} } );
             }
