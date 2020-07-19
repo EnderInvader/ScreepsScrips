@@ -26,6 +26,32 @@ Level 8 -
 TODO:
 targeted room attack
 long distance mining
-place two claim parts on claimer bot
 auto recycle
+automatic slevel
+
+
+DONE:
+scout bot
+autospawning of scouts
+place two claim parts on claimer bot
 autospawning of claimers
+
+
+
+
+ClaimState
+-1: Move to room
+0: Sign
+1: Reserve
+2: Claim
+
+AttackState
+-1: Move to room
+0: Attacking
+1: Attack other enemies
+
+EnemyState
+-1: Unknown
+0: No enemy
+1: Player enemy
+2: Invader enemy

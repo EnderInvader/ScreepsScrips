@@ -7,9 +7,13 @@ var roleRangedDefender = require('role.rangeddefender');
 var roleHauler = require('role.hauler');
 var roleHealer = require('role.healer');
 var roleClaimer = require('role.claimer');
+var roleScout = require('role.scout');
+var roleTargetAttacker = require('role.targetAttacker');
 var roleRecycled = require('role.recycled');
+
 var buildingSpawner = require('building.spawner');
 var buildingTower = require('building.tower');
+
 var spawnHarvester = require('spawn.harvester');
 var spawnUpgrader = require('spawn.upgrader');
 var spawnBuilder = require('spawn.builder');
@@ -17,6 +21,9 @@ var spawnRepairer = require('spawn.repairer');
 var spawnRangedDefender = require('spawn.rangedDefender');
 var spawnHauler = require('spawn.hauler');
 var spawnHealer = require('spawn.healer');
+var spawnScout = require('spawn.scout');
+var spawnClaimer = require('spawn.claimer');
+var spawnTargetAttacker = require('spawn.targetAttacker');
 
 module.exports.loop = function () {
 
@@ -67,25 +74,6 @@ module.exports.loop = function () {
 			}
 		}
 	}
-	
-    /**else if(builders.length < 3) {
-        var newName = 'Builder' + Game.time;
-        console.log('Spawning new builder: ' + newName);
-		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],     newName,     { memory: { role: 'builder' , level: 4 } } );
-    }
-	if(spawn.energy > 200){
-    if(repairers.length < 1) {
-        var newName = 'Repairer' + Game.time;
-        console.log('Spawning new repairer: ' + newName);
-		Game.spawns['Spawn1'].spawnCreep( [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],     newName,     { memory: { role: 'repairer' , level: 4 } } );
-    }
-	
-	
-    else if(rangeddefenders.length < 6) {
-        var newName = 'RangedDefender' + Game.time;
-        console.log('Spawning new ranged defender: ' + newName);
-		Game.spawns['Spawn1'].spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK],     newName,     { memory: { role: 'rangeddefender' , level: 4 } } );
-	}}**/
     
     if(Game.spawns['Spawn1'].spawning) { 
         var spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning.name];
@@ -94,7 +82,7 @@ module.exports.loop = function () {
             Game.spawns['Spawn1'].pos.x + 1, 
             Game.spawns['Spawn1'].pos.y, 
             {align: 'left', opacity: 0.8});
-            Game.spawns['Spawn1'].spawning.setDirections([TOP_RIGHT,TOP_LEFT,TOP,RIGHT,BOTTOM_RIGHT]);
+            Game.spawns['Spawn1'].spawning.setDirections([TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT]);
     }
 
     for(var name in Game.creeps) {
@@ -115,7 +103,9 @@ module.exports.loop = function () {
             if(harvesters.length == 0){
                 roleHarvester.run(creep, controllerlevel);
             }
-            roleBuilder.run(creep, controllerlevel);
+            else {
+                roleBuilder.run(creep, controllerlevel);
+            }
         }
 		else if(creep.memory.role == 'repairer') {
             roleRepairer.run(creep, controllerlevel);
@@ -132,11 +122,17 @@ module.exports.loop = function () {
         else if(creep.memory.role == 'claimer') {
             roleClaimer.run(creep);
         }
+        else if(creep.memory.role == 'scout') {
+            roleScout.run(creep);
+        }
+        else if(creep.memory.role == 'targetAttacker') {
+            roleTargetAttacker.run(creep);
+        }
         else if(creep.memory.role == 'recycle') {
             roleRecycled.run(creep);
         }
 		else {
-			console.log("ERR_ROLE_NOT_FOUND");
+			console.log("ERR_ROLE_NOT_FOUND  " + name);
 		}
     }
 	
@@ -149,6 +145,40 @@ module.exports.loop = function () {
 		var tower = Game.structures[name];
         if(tower.structureType == STRUCTURE_TOWER){
             buildingTower.run(tower);
+        }
+    }
+    
+    //Attack Rooms
+    for(var i in Memory.targetRooms) {
+        var targetRoom = Memory.targetRooms[i];
+        if (Game.time - targetRoom.lastScan > 500) {//Spawn Scouts
+            //console.log(targetRoom.name);
+            var scouts = _.filter(Game.creeps, (creep) => creep.memory.role == 'scout');
+            if(scouts.length == 0 && !spawn.spawning){
+                var spawnScouts = spawnScout.spawnScout.run(spawn, targetRoom);
+            }
+        }
+        
+        switch (targetRoom.enemyState) {//targetRoom.enemyState
+            case -1:
+                break;
+                
+            case 0:
+                var claimers = _.filter(Game.creeps, (creep) => creep.memory.role == 'claimer');
+                if(claimers.length == 0 && !spawn.spawning){// && Game.rooms[targetRoom.name].controller.reservation.ticksToEnd < 100
+                    if (targetRoom.reserved.ticksToEnd - (Game.time - targetRoom.lastScan) < 200) {
+                        var spawnClaimers = spawnClaimer.spawnClaimer.run(spawn, 4, targetRoom.name);
+                    }
+                }
+                break;
+                
+            case 1:
+            case 2:
+                var targetAttackers = _.filter(Game.creeps, (creep) => creep.memory.role == 'targetAttacker');
+                if(targetAttackers.length < 2 && !spawn.spawning){
+                    var spawnTargetAttackers = spawnTargetAttacker.spawnTargetAttacker.run(spawn, 4, targetRoom.name);
+                }
+                break;
         }
     }
 }

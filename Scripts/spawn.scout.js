@@ -16,10 +16,10 @@ var spawnScout = {
 		var temp = 0;
 		var error = "";
 		
-		if(room.energyAvailable >= 750) {
+		if(room.energyAvailable >= 100) {
 		    var newName = 'Scout' + Game.time;
 		    console.log('Spawning new scout: ' + newName);
-		    var temp = spawn.spawnCreep( [MOVE,MOVE],newName,{ memory: { role: 'scout', target: targetRoom} } );//100
+		    var temp = spawn.spawnCreep( [MOVE,MOVE],newName,{ memory: { role: 'scout', target: targetRoom.name} } );//100
 		}
 		else {
 		    temp = -6;

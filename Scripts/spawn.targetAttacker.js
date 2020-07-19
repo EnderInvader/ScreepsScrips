@@ -9,11 +9,11 @@ var spawnTargetAttacker = {
 	    var room = spawn.room;
 		var controller = room.controller;
 		var controllerLevel = controller.level;
-		var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+		var targetAttackers = _.filter(Game.creeps, (creep) => creep.memory.role == 'targetAttacker');
 		
-		var buildersLv1 = _.filter(builders, (creep) => creep.memory.level == 1);
-		var buildersLv2 = _.filter(builders, (creep) => creep.memory.level == 2);
-		var buildersLv3 = _.filter(builders, (creep) => creep.memory.level == 3);
+		var targetAttackersLv3 = _.filter(targetAttackers, (creep) => creep.memory.level == 3);
+		var targetAttackersLv4 = _.filter(targetAttackers, (creep) => creep.memory.level == 4);
+		var targetAttackersLv5 = _.filter(targetAttackers, (creep) => creep.memory.level == 5);
 		var success = true;
 		var temp = 0;
 		var error = "";
@@ -24,57 +24,41 @@ var spawnTargetAttacker = {
 		    Slevel = OSlevel;
 		}
 		
-		/**Starter Builder, Level 1**///300
-		if (Slevel == 1) {
-			if(buildersLv1.length < 2) {
-			    if(room.energyAvailable >= 250) {
-				    var newName = 'StarterBuilder' + Game.time;
-				    console.log('Spawning new builder: ' + newName);
-				    var temp = spawn.spawnCreep( [WORK,CARRY,MOVE],newName,{ memory: { role: 'builder' , level:1} } );//200
-			    }
-			}
-			else{
-				var success = false;
-				var error = 'Max number of Builders Level 1, Reached';
-				var temp = -99;
+		if (Slevel == 1 || Slevel == 2) {
+			var success = false;
+			var error = 'No Attackers Level ' + Slevel;
+			var temp = -99;
+		}
+		/**Attacker, Level 3**///800
+		else if (Slevel == 3) {//800
+			if(room.energyAvailable >= 800) {
+			    var newName = 'Attacker1' + targetRoom + '' + Game.time;
+			    console.log('Spawning new attacker: ' + newName + '   Target: ' + targetRoom);
+			    var temp = spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'targetAttacker' , level:3, target: targetRoom, attackState: -1} } );//800
+		    }
+		}
+		
+		/**Attacker, Level 4**///1200
+		else if (Slevel == 4) {//1300
+			if(room.energyAvailable >= 1200) {
+				var newName = 'Attacker2' + targetRoom + '' + Game.time;
+				console.log('Spawning new attacker: ' + newName + '   Target: ' + targetRoom);
+				var temp = spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'targetAttacker' , level:4, target: targetRoom, attackState: -1} } );//1200
 			}
 		}
 		
-		/**Basic Builder, Level 2**///550
-		else if (Slevel == 2) {
-			if(buildersLv2.length < 2) {
-			    if(room.energyAvailable >= 450) {
-				    var newName = 'BasicBuilder' + Game.time;
-				    console.log('Spawning new builder: ' + newName);
-				    var temp = spawn.spawnCreep( [WORK,WORK,CARRY,CARRY,MOVE,MOVE],newName,{ memory: { role: 'builder' , level:2} } );//400
-			    }
-			}
-			else{
-				var success = false;
-				//var error = 'Max number of Builders Level 2, Reached';
-				var temp = -99;
-			}
-		}
-		
-		/**Basic Builder, Level 3**///800
-		else if (Slevel == 3) {
-			if(buildersLv3.length < 2) {
-			    if(room.energyAvailable >= 750) {
-				    var newName = 'AdvancedBuilder' + Game.time;
-				    console.log('Spawning new builder: ' + newName);
-				    var temp = spawn.spawnCreep( [WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE],newName,{ memory: { role: 'builder' , level:3} } );//700
-			    }
-			}
-			else{
-				var success = false;
-				//var error = 'Max number of Builders Level 3, Reached';
-				var temp = -99;
+		/**Attacker, Level 5**///1580
+		else if (Slevel == 5) {//1800
+			if(room.energyAvailable >= 1580) {
+				var newName = 'Attacker3' + targetRoom + '' + Game.time;
+				console.log('Spawning new attacker: ' + newName + '   Target: ' + targetRoom);
+				var temp = spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'targetAttacker' , level:5, target: targetRoom, attackState: -1} } );//1500
 			}
 		}
 		
 		else {
 			var success = false;
-			console.log('Controller Level, Out of Range, Builder');
+			console.log('Controller Level, Out of Range, Target Attacker');
 		}
 		
 		
@@ -114,7 +98,7 @@ var spawnTargetAttacker = {
 			return success;
 		}
 		else{
-			//console.log('Builder Spawning Error: ' + error);
+			//console.log('Attacker Spawning Error: ' + error);
 			return temp;
 		}
 	}
@@ -127,20 +111,20 @@ var consoleSpawnTargetAttacker = {
 	    }
 	    else {
 	        
-	        if (level == 1) {//550
-	            var newName = 'UnarmoredClaimer' + targetRoom + '' + Game.time;
-			    console.log('Spawning new claimer: ' + newName + '   Target: ' + targetRoom);
-			    Game.spawns[spawnName].spawnCreep( [CLAIM,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:3, target: targetRoom, claimState: 0} } );//700
+	        if (level == 1) {//3 800
+	            var newName = 'Attacker1' + Game.time;
+			    console.log('Spawning new target attacker: ' + newName + '   Target: ' + targetRoom);
+			    Game.spawns[spawnName].spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,RANGED_ATTACK,RANGED_ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'targetAttacker' , level:3, target: targetRoom, attackState: -1} } );//700
 		    }
-		    else if (level == 2) {//800
-		        var newName = 'Claimer' + targetRoom + '' + Game.time;
-			    console.log('Spawning new claimer: ' + newName + '   Target: ' + targetRoom);
-			    Game.spawns[spawnName].spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,CLAIM,MOVE,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:4, target: targetRoom, claimState: 0} } );//800
+		    else if (level == 2) {//4 1300
+		        var newName = 'Attacker2' + Game.time;
+			    console.log('Spawning new target attacker: ' + newName + '   Target: ' + targetRoom);
+			    Game.spawns[spawnName].spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,CLAIM,MOVE,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:4, target: targetRoom, claimState: -1} } );//800
             }
-		    else if (level == 3) {//1300
-		        var newName = 'AdvancedClaimer' + targetRoom + '' + Game.time;
-			    console.log('Spawning new claimer: ' + newName + '   Target: ' + targetRoom);
-			    Game.spawns[spawnName].spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,CLAIM,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:5, target: targetRoom, claimState: 0} } );
+		    else if (level == 3) {//5 1800
+		        var newName = 'Attacker3' + Game.time;
+			    console.log('Spawning new target attacker: ' + newName + '   Target: ' + targetRoom);
+			    Game.spawns[spawnName].spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,CLAIM,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:5, target: targetRoom, claimState: -1} } );
             }
             
             else {

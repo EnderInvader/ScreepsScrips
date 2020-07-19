@@ -15,7 +15,7 @@ var roleRangedDefender = {
             if(creep.rangedAttack(target) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target, {visualizePathStyle: {stroke: '#8000ff'}});
             }
-            console.log("ALERT!!!! WE ARE UNDER ATTACK!!!!!");
+            console.log(`User ${username} with creep ${name} spotted in room ${myRoomName.name}`);
         }
 		else {
 			creep.moveTo(Game.flags.IdleDefenders);
