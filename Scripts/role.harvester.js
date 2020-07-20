@@ -107,20 +107,20 @@ var roleHarvester = {
             if(!creep.memory.Csource){
                 var sources = creep.room.find(FIND_SOURCES_ACTIVE);
                 if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+                    creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ff8000'}});
                 }
             }
             else{
                 var sources = creep.room.find(FIND_SOURCES);
                 if(sources[creep.memory.Csource - 1].energy > 0) {
                     if(creep.harvest(sources[creep.memory.Csource - 1]) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(sources[creep.memory.Csource - 1], {visualizePathStyle: {stroke: '#ffaa00'}});
+                        creep.moveTo(sources[creep.memory.Csource - 1], {visualizePathStyle: {stroke: '#ff8000'}});
                     }
                 }
                 else{
                     var sources = creep.room.find(FIND_SOURCES_ACTIVE);
                     if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+                        creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ff8000'}});
                     }
                 }
             }

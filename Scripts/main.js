@@ -166,7 +166,7 @@ module.exports.loop = function () {
             case 0:
                 var claimers = _.filter(Game.creeps, (creep) => creep.memory.role == 'claimer');
                 if(claimers.length == 0 && !spawn.spawning){// && Game.rooms[targetRoom.name].controller.reservation.ticksToEnd < 100
-                    if (targetRoom.reserved.ticksToEnd - (Game.time - targetRoom.lastScan) < 200) {
+                    if (targetRoom.reserved.ticksToEnd - (Game.time - targetRoom.lastScan) < 5000 || !targetRoom.reserved) {//2000
                         var spawnClaimers = spawnClaimer.spawnClaimer.run(spawn, 4, targetRoom.name);
                     }
                 }
@@ -186,7 +186,7 @@ module.exports.loop = function () {
 /**
 Trail Colors
 Red (ff0000) Destroy Structure
-Orange (ff8000) 
+Orange (ff8000) Withdraw
 Yellow (ffff00) Deposit
 Light Green (80ff00)
 Green (00ff00) Renew

@@ -103,7 +103,7 @@ var spawnTargetAttacker = {
 		}
 	}
 };
-
+//require('spawn.targetAttacker').consoleSpawnTargetAttacker.run('Spawn1',1,'W33S36');
 var consoleSpawnTargetAttacker = {
 	run: function(spawnName, level, targetRoom) {
 	    if (Game.map.describeExits(targetRoom) == null) {
@@ -112,9 +112,9 @@ var consoleSpawnTargetAttacker = {
 	    else {
 	        
 	        if (level == 1) {//3 800
-	            var newName = 'Attacker1' + Game.time;
+	            var newName = 'RangedAttacker1' + Game.time;
 			    console.log('Spawning new target attacker: ' + newName + '   Target: ' + targetRoom);
-			    Game.spawns[spawnName].spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,RANGED_ATTACK,RANGED_ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'targetAttacker' , level:3, target: targetRoom, attackState: -1} } );//700
+			    Game.spawns[spawnName].spawnCreep( [RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'targetAttacker' , level:3, target: targetRoom, attackState: -1} } );//800
 		    }
 		    else if (level == 2) {//4 1300
 		        var newName = 'Attacker2' + Game.time;

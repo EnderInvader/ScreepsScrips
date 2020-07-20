@@ -24,7 +24,8 @@ Level 8 -
 
 
 TODO:
-targeted room attack
+targeted room attack?
+add healing to attacker?
 long distance mining
 auto recycle
 automatic slevel
