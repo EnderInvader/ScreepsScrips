@@ -55,8 +55,12 @@ var roleUpgrader = {
 		if(creep.memory.level > 1) {//creep.memory.level >= controllerlevel - 1
 			if(creep.ticksToLive <= 600 || creep.memory.renewing) {
 			    creep.memory.renewing = true;
-				creep.cancelOrder('move');
-				creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#00ff00'}})
+				if (!Game.spawns['Spawn1'].spawning) {
+                    creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#00ff00'}})
+                }
+                else {
+                    creep.moveTo(Game.flags.IdleCreeps, {visualizePathStyle: {stroke: '#00ff00'}})
+                }
 				creep.say('renew');
 			}
 			if(creep.memory.renewing && creep.ticksToLive >= 1400)

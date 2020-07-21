@@ -24,11 +24,12 @@ Level 8 -
 
 
 TODO:
-targeted room attack?
 add healing to attacker?
 long distance mining
 auto recycle
 automatic slevel
+slevel 4 and 5 bots
+set up auto claimer spawn to be able to spawn claimers targeted to two different rooms
 
 
 DONE:
@@ -36,6 +37,8 @@ scout bot
 autospawning of scouts
 place two claim parts on claimer bot
 autospawning of claimers
+targeted room attack
+rebalance attack 1 move for every other part
 
 
 

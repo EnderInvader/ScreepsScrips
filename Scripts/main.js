@@ -151,34 +151,36 @@ module.exports.loop = function () {
     //Attack Rooms
     for(var i in Memory.targetRooms) {
         var targetRoom = Memory.targetRooms[i];
-        if (Game.time - targetRoom.lastScan > 500) {//Spawn Scouts
-            //console.log(targetRoom.name);
-            var scouts = _.filter(Game.creeps, (creep) => creep.memory.role == 'scout');
-            if(scouts.length == 0 && !spawn.spawning){
-                var spawnScouts = spawnScout.spawnScout.run(spawn, targetRoom);
+        if (targetRoom.activeTarget) {
+            if (Game.time - targetRoom.lastScan > 500) {//Spawn Scouts
+                //console.log(targetRoom.name);
+                var scouts = _.filter(Game.creeps, (creep) => creep.memory.role == 'scout');
+                if(scouts.length == 0 && !spawn.spawning){
+                    var spawnScouts = spawnScout.spawnScout.run(spawn, targetRoom);
+                }
             }
-        }
-        
-        switch (targetRoom.enemyState) {//targetRoom.enemyState
-            case -1:
-                break;
-                
-            case 0:
-                var claimers = _.filter(Game.creeps, (creep) => creep.memory.role == 'claimer');
-                if(claimers.length == 0 && !spawn.spawning){// && Game.rooms[targetRoom.name].controller.reservation.ticksToEnd < 100
-                    if (targetRoom.reserved.ticksToEnd - (Game.time - targetRoom.lastScan) < 5000 || !targetRoom.reserved) {//2000
-                        var spawnClaimers = spawnClaimer.spawnClaimer.run(spawn, 4, targetRoom.name);
+            
+            switch (targetRoom.enemyState) {//targetRoom.enemyState
+                case -1:
+                    break;
+                    
+                case 0:
+                    var claimers = _.filter(Game.creeps, (creep) => (creep.memory.role == 'claimer', creep.memory.target == targetRoom.name));
+                    if(claimers.length == 0 && !spawn.spawning){// && Game.rooms[targetRoom.name].controller.reservation.ticksToEnd < 100
+                        if (!targetRoom.reserved || targetRoom.reserved.ticksToEnd - (Game.time - targetRoom.lastScan) < 3000) {//2000
+                            var spawnClaimers = spawnClaimer.spawnClaimer.run(spawn, 4, targetRoom.name);
+                        }
                     }
-                }
-                break;
-                
-            case 1:
-            case 2:
-                var targetAttackers = _.filter(Game.creeps, (creep) => creep.memory.role == 'targetAttacker');
-                if(targetAttackers.length < 2 && !spawn.spawning){
-                    var spawnTargetAttackers = spawnTargetAttacker.spawnTargetAttacker.run(spawn, 4, targetRoom.name);
-                }
-                break;
+                    break;
+                    
+                case 1:
+                case 2:
+                    var targetAttackers = _.filter(Game.creeps, (creep) => creep.memory.role == 'targetAttacker');
+                    if(targetAttackers.length < 2 && !spawn.spawning){
+                        var spawnTargetAttackers = spawnTargetAttacker.spawnTargetAttacker.run(spawn, 5, targetRoom.name);
+                    }
+                    break;
+            }
         }
     }
 }

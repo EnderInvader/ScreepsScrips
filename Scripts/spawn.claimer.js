@@ -38,21 +38,21 @@ var spawnClaimer = {
 		    }
 		}
 		
-		/**Claimer, Level 4**///1300
-		else if (Slevel == 4) {
+		/**Claimer, Level 4 and 5**///1300
+		else if (Slevel == 4 || Slevel == 5) {//1300 and 1800
 			if(room.energyAvailable >= 1300) {
 				var newName = 'Claimer2' + targetRoom + '' + Game.time;
 				console.log('Spawning new claimer: ' + newName + '   Target: ' + targetRoom);
-				var temp = spawn.spawnCreep( [CLAIM,CLAIM,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:4, target: targetRoom, claimState: -1} } );//1300
+				var temp = spawn.spawnCreep( [CLAIM,CLAIM,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:Slevel, target: targetRoom, claimState: -1} } );//1300
 			}
 		}
 		
-		/**Claimer, Level 5**///1420
-		else if (Slevel == 5) {
-			if(room.energyAvailable >= 1420) {
-				var newName = 'Claimer3' + targetRoom + '' + Game.time;
+		/**Claimer, Level 6**///1950
+		else if (Slevel == 6) {//2300
+			if(room.energyAvailable >= 1950) {
+				var newName = 'Claimer2' + targetRoom + '' + Game.time;
 				console.log('Spawning new claimer: ' + newName + '   Target: ' + targetRoom);
-				var temp = spawn.spawnCreep( [TOUGH,TOUGH,CLAIM,CLAIM,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:5, target: targetRoom, claimState: -1} } );//1420
+				var temp = spawn.spawnCreep( [CLAIM,CLAIM,CLAIM,MOVE,MOVE,MOVE],newName,{ memory: { role: 'claimer' , level:6, target: targetRoom, claimState: -1} } );//1950
 			}
 		}
 		

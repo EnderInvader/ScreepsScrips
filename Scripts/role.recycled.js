@@ -66,7 +66,7 @@ var roleRecycled = {
             }
         }
         else{
-            creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#ff0080'}});
+            creep.moveTo(Game.spawns['Spawn1'], {ignoreCreeps: true, visualizePathStyle: {stroke: '#ff0080'}});
         }
 	}
 };

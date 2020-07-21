@@ -13,7 +13,7 @@ var roleRangedDefender = {
             var name = target.name;
             Game.notify(`User ${username} with creep ${name} spotted in room ${myRoomName.name}`);
             if(creep.rangedAttack(target) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, {visualizePathStyle: {stroke: '#8000ff'}});
+                creep.moveTo(target, {ignoreDestructibleStructures: true, ignoreCreeps: true, visualizePathStyle: {stroke: '#8000ff'}});
             }
             console.log(`User ${username} with creep ${name} spotted in room ${myRoomName.name}`);
         }
@@ -26,8 +26,12 @@ var roleRangedDefender = {
 		if(true) {//creep.memory.level >= controllerlevel - 1
 			if(creep.ticksToLive <= 600 || creep.memory.renewing) {
 			    creep.memory.renewing = true;
-				creep.cancelOrder('move');
-				creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#00ff00'}})
+				if (!Game.spawns['Spawn1'].spawning) {
+                    creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#00ff00'}})
+                }
+                else {
+                    creep.moveTo(Game.flags.IdleCreeps, {visualizePathStyle: {stroke: '#00ff00'}})
+                }
 				creep.say('renew');
 			}
 			if(creep.memory.renewing && creep.ticksToLive >= 1400)

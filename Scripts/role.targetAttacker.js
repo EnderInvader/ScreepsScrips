@@ -10,8 +10,8 @@ var roleTargetAttacker = {
     run: function(creep) {
         var targetRoom = creep.memory.target;
         
-        if(creep.room.name != targetRoom) {
-            creep.moveTo(new RoomPosition(25, 25, targetRoom), {reusePath: 50, visualizePathStyle: {stroke: '#ffffff'}});
+        if(creep.room.name != targetRoom && creep.memory.attackState != -2) {
+            creep.moveTo(new RoomPosition(25, 25, targetRoom), {reusePath: 50, ignoreCreeps: true, visualizePathStyle: {stroke: '#ffffff'}});
             creep.memory.attackState = -1;
         }
         else if (creep.memory.attackState == -1) {
@@ -20,7 +20,7 @@ var roleTargetAttacker = {
         
         switch(creep.memory.attackState) {
           case -2:
-            creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#00ff00'}});
+            creep.moveTo(Game.spawns['Spawn1'], {ignoreCreeps: true, visualizePathStyle: {stroke: '#00ff00'}});
             if (creep.hits == creep.hitsMax) {
                 creep.memory.attackState = 0;
             }
@@ -32,16 +32,15 @@ var roleTargetAttacker = {
             
           case 0:
             creep.say("attacking");
-            if (creep.hits < creep.hitsMax * 0.3) {
+            if (creep.hits < creep.hitsMax * 0.5) {
                 creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#8000ff'}});
                 creep.memory.attackState = -2;
             }
             else {
                 const target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);//FIND_HOSTILE_CREEPS
                 if (target) {
-                    if(creep.attack(target) == ERR_NOT_IN_RANGE) {//rangedAttack   attack
-                        creep.moveTo(target, {visualizePathStyle: {stroke: '#8000ff'}});
-                    }
+                    creep.moveTo(target, {ignoreCreeps: true, visualizePathStyle: {stroke: '#8000ff'}});
+                    creep.attack(target);
                 }
                 else {
                     const target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES);
@@ -50,21 +49,17 @@ var roleTargetAttacker = {
                             creep.moveTo(target, {visualizePathStyle: {stroke: '#8000ff'}});
                         }
                     }
+                    else if (creep.hits < creep.hitsMax) {
+                        creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#8000ff'}});
+                        creep.memory.attackState = -2;
+                    }
                     else {
                         const target = creep.pos.findClosestByRange(FIND_HOSTILE_CONSTRUCTION_SITES);
                         if(target) {
-                            if(creep.attack(target) == ERR_NOT_IN_RANGE) {
-                                creep.moveTo(target, {visualizePathStyle: {stroke: '#8000ff'}});
-                            }
+                            creep.moveTo(target, {visualizePathStyle: {stroke: '#8000ff'}});
                         }
                         else {
-                            if (creep.hits < creep.hitsMax) {
-                                creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#8000ff'}});
-                                creep.memory.attackState = -2;
-                            }
-                            else {
-                                creep.memory.attackState = 1;
-                            }
+                            creep.memory.attackState = 1;
                         }
                     }
                 }

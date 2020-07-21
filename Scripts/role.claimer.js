@@ -9,7 +9,7 @@ var roleClaimer = {
         var targetRoom = creep.memory.target //target room
         
         if(creep.room.name != targetRoom) {
-            creep.moveTo(new RoomPosition(25, 25, targetRoom), {reusePath: 50, visualizePathStyle: {stroke: '#ffffff'}});
+            creep.moveTo(new RoomPosition(25, 25, targetRoom), {reusePath: 50, ignoreCreeps: true, visualizePathStyle: {stroke: '#ffffff'}});
             creep.memory.claimState = -1;
         }
         else if (creep.memory.claimState == -1) {
@@ -56,6 +56,22 @@ var roleClaimer = {
             default:
                 creep.say("Unknown");
                 creep.moveTo(25, 25);
+        }
+
+        if (creep.ticksToLive <= 50) {
+            const target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+            if (target) {
+                require('role.scout').updateRoom(targetRoom, 1);
+            }
+            else {
+                const target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES);
+                if (target) {
+                    require('role.scout').updateRoom(targetRoom, 2);
+                }
+                else {
+                    require('role.scout').updateRoom(targetRoom, 0);
+                }
+            }
         }
 	}
 };

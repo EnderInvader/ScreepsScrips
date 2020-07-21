@@ -14,14 +14,23 @@ var roleHauler = {
 	    if(creep.memory.despositing) {
 	        var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_EXTENSION ||
-                            structure.structureType == STRUCTURE_SPAWN ||
+                    return (structure.structureType == STRUCTURE_SPAWN ||
+                            structure.structureType == STRUCTURE_EXTENSION ||
                             structure.structureType == STRUCTURE_TOWER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                 }
 	        });
 	        targets.sort(function (a, b) {
+	        	//TODO: sort also by, spawn > extenstion > (tower how much energy)
 	        	
-                return creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b);
+	        	if (a.structureType == STRUCTURE_EXTENSION && b.structureType == STRUCTURE_SPAWN) return 1;
+	        	if (a.structureType == STRUCTURE_TOWER && b.structureType == STRUCTURE_EXTENSION) return 1;
+	        	
+	        	if (a.structureType == STRUCTURE_SPAWN && b.structureType == STRUCTURE_EXTENSION) return -1;
+	        	if (a.structureType == STRUCTURE_EXTENSION && b.structureType == STRUCTURE_TOWER) return -1;
+	        	
+	        	if (creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) > 0) return 1;
+	        	if (creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) < 0) return -1;
+	        	return 0;
             });
 	        if(targets.length > 0) {
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -106,7 +115,7 @@ var roleHauler = {
 							return 0;
 						});
 
-						var storages = creep.room.find(FIND_STRUCTURES, {
+						var storages = creep.room.find(FIND_STRUCTURES, {//TODO: Grab from containers first?
 							filter: (structure) => {
 								return (structure.structureType == STRUCTURE_STORAGE) && structure.store[RESOURCE_ENERGY] > 10000;
 							}
@@ -128,8 +137,12 @@ var roleHauler = {
 		if(true) {//creep.memory.level >= controllerlevel - 1
 			if(creep.ticksToLive <= 600 || creep.memory.renewing) {
 			    creep.memory.renewing = true;
-				creep.cancelOrder('move');
-				creep.moveTo(Game.spawns['Spawn1'], {reusePath: 20, visualizePathStyle: {stroke: '#00ff00'}})
+				if (!Game.spawns['Spawn1'].spawning) {
+                    creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#00ff00'}})
+                }
+                else {
+                    creep.moveTo(Game.flags.IdleCreeps, {visualizePathStyle: {stroke: '#00ff00'}})
+                }
 				creep.say('renew');
 			}
 			if(creep.memory.renewing && creep.ticksToLive >= 1400)

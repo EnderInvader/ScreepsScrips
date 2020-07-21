@@ -24,7 +24,12 @@ var buildingTower = {
             else {
                 var targets = tower.room.find(FIND_STRUCTURES, {
                     filter: (s) => {
-                        return (s.hits < s.hitsMax)
+                        if (s.structureType == STRUCTURE_WALL || s.structureType == STRUCTURE_RAMPART) {
+                            return (s.hits < 100000)
+                        }
+                        else {
+                            return (s.hits < s.hitsMax)
+                        }
                     }
                 });
                 if (targets.length > 0) {

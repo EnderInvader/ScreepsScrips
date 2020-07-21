@@ -29,21 +29,21 @@ var spawnTargetAttacker = {
 			var error = 'No Attackers Level ' + Slevel;
 			var temp = -99;
 		}
-		/**Attacker, Level 3**///800
+		/**Attacker, Level 3**///770
 		else if (Slevel == 3) {//800
-			if(room.energyAvailable >= 800) {
+			if(room.energyAvailable >= 770) {
 			    var newName = 'Attacker1' + targetRoom + '' + Game.time;
 			    console.log('Spawning new attacker: ' + newName + '   Target: ' + targetRoom);
-			    var temp = spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'targetAttacker' , level:3, target: targetRoom, attackState: -1} } );//800
+			    var temp = spawn.spawnCreep( [TOUGH,TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'targetAttacker' , level:3, target: targetRoom, attackState: -1} } );//770
 		    }
 		}
 		
-		/**Attacker, Level 4**///1200
+		/**Attacker, Level 4**///1220
 		else if (Slevel == 4) {//1300
-			if(room.energyAvailable >= 1200) {
+			if(room.energyAvailable >= 1220) {
 				var newName = 'Attacker2' + targetRoom + '' + Game.time;
 				console.log('Spawning new attacker: ' + newName + '   Target: ' + targetRoom);
-				var temp = spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'targetAttacker' , level:4, target: targetRoom, attackState: -1} } );//1200
+				var temp = spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'targetAttacker' , level:4, target: targetRoom, attackState: -1} } );//1220
 			}
 		}
 		
@@ -52,7 +52,7 @@ var spawnTargetAttacker = {
 			if(room.energyAvailable >= 1580) {
 				var newName = 'Attacker3' + targetRoom + '' + Game.time;
 				console.log('Spawning new attacker: ' + newName + '   Target: ' + targetRoom);
-				var temp = spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'targetAttacker' , level:5, target: targetRoom, attackState: -1} } );//1500
+				var temp = spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'targetAttacker' , level:5, target: targetRoom, attackState: -1} } );//1500
 			}
 		}
 		
