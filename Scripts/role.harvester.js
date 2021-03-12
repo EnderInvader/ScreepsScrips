@@ -1,7 +1,10 @@
 var roleHarvester = {
 
     /** @param {Creep} creep **/
-    run: function(creep, controllerlevel) { 
+    run: function(creep) {
+        spawn = creep.room.find(FIND_MY_SPAWNS)[0];
+        var OSlevel = spawn.memory.OSlevel;
+        
         if(!creep.memory.Csource){
             creep.say("Starting");
             creep.memory.Csource = 1;
@@ -89,13 +92,15 @@ var roleHarvester = {
                             }
                             else 
                             {
-                                if(controllerlevel == 1){
+                                if(creep.memory.level <= 1){
                                     var roleBuilder = require('role.builder');
                                     roleBuilder.run(creep);
                                 }
                                 else {
                                     creep.say('all full')
-                                    creep.moveTo(Game.flags.IdleCreeps, {visualizePathStyle: {stroke: '#ffffff'}});
+                                    creep.moveTo(new RoomPosition(creep.room.memory.IdleCreeps.x,creep.room.memory.IdleCreeps.y,creep.room.memory.IdleCreeps.roomName), {reusePath: 20, visualizePathStyle: {stroke: '#ffffff'}});
+                                    
+                                    delete creep.memory.building;
                                 }
                             }
                         }
@@ -149,25 +154,34 @@ var roleHarvester = {
                 else 
                 {
                     creep.say('all sources empty')
-                    creep.moveTo(Game.flags.IdleCreeps, {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(creep.room.memory.IdleCreeps, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }**/
         }
         
         
         
-        /*if(creep.memory.level >= controllerlevel) {
-            if(creep.ticksToLive <= 600 || creep.memory.renewing) {
-                creep.memory.renewing = true;
-                creep.cancelOrder('move');
-                creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#00ff00'}})
-                creep.say('renew');
-            }
-            if(creep.memory.renewing && creep.ticksToLive >= 1400)
-            {
-                creep.memory.renewing = false;
-            }
-        }*/
+        if(creep.memory.level >= OSlevel) {//creep.memory.level >= controllerlevel - 1
+			if(creep.ticksToLive <= 600 || creep.memory.renewing) {
+				creep.memory.renewing = true;
+				if (!Game.spawns['Spawn1'].spawning) {
+					creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#00ff00'}})
+				}
+				else {
+					creep.moveTo(Game.flags.IdleCreeps, {visualizePathStyle: {stroke: '#00ff00'}})
+				}
+				creep.say('renew');
+			}
+			if(creep.memory.renewing && creep.ticksToLive >= 1400)
+			{
+				creep.memory.renewing = false;
+			}
+		}
+		else {
+		    if(creep.ticksToLive <= 1000) {
+				creep.memory.role = "recycle";
+			}
+		}
     }
 };
 module.exports = roleHarvester;

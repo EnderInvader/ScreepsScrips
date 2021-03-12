@@ -11,6 +11,9 @@ var spawnUpgrader = {
 		
 		var upgradersLv1 = _.filter(upgraders, (creep) => creep.memory.level == 1);
 		var upgradersLv2 = _.filter(upgraders, (creep) => creep.memory.level == 2);
+		var upgradersLv3 = _.filter(upgraders, (creep) => creep.memory.level == 3);
+		var upgradersLv4 = _.filter(upgraders, (creep) => creep.memory.level == 4);
+		var upgradersLv5 = _.filter(upgraders, (creep) => creep.memory.level == 5);
 		var success = true;
 		var temp = 0;
 		var error = "";
@@ -42,7 +45,7 @@ var spawnUpgrader = {
 		}
 		
 		/**Basic Upgrader, Level 2**/
-		else if (Slevel == 2 || Slevel == 3) {
+		else if (Slevel == 2) {
 			if(upgradersLv2.length < 2) {
 			    if(room.energyAvailable >= 500) {
 				    var newName = 'BasicUpgrader' + Game.time;
@@ -61,10 +64,69 @@ var spawnUpgrader = {
 			}
 		}
 		
+		/**Advanced Upgrader, Level 3**/
+		else if (Slevel == 3) {
+			if(upgradersLv3.length < 2) {
+			    if(room.energyAvailable >= 500) {
+				    var newName = 'AdvancedUpgrader' + Game.time;
+				    console.log('Spawning new upgrader: ' + newName);
+				    var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'upgrader' , level:3} } );//450
+			    }
+			    else
+			    {
+			        //console.log(room.energyAvailable)
+			    }
+			}
+			else{
+				var success = false;
+				var error = 'Max number of Upgraders Level 3, Reached';
+				var temp = -99;
+			}
+		}
+		
+		else if (Slevel == 4) {
+			if(upgradersLv4.length < 2) {
+			    if(room.energyAvailable >= 500) {
+				    var newName = 'Upgrader' + Game.time;
+				    console.log('Spawning new upgrader: ' + newName);
+				    var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'upgrader' , level:4} } );//450
+			    }
+			    else
+			    {
+			        //console.log(room.energyAvailable)
+			    }
+			}
+			else{
+				var success = false;
+				var error = 'Max number of Upgraders Level 4, Reached';
+				var temp = -99;
+			}
+		}
+		
+		else if (Slevel == 5) {
+			if(upgradersLv5.length < 2) {
+			    if(room.energyAvailable >= 500) {
+				    var newName = 'HighUpgrader' + Game.time;
+				    console.log('Spawning new upgrader: ' + newName);
+				    var temp = spawn.spawnCreep( [WORK,WORK,WORK,CARRY,MOVE,MOVE],newName,{ memory: { role: 'upgrader' , level:5} } );//450
+			    }
+			    else
+			    {
+			        //console.log(room.energyAvailable)
+			    }
+			}
+			else{
+				var success = false;
+				var error = 'Max number of Upgraders Level 5, Reached';
+				var temp = -99;
+			}
+		}
+		
 		else {
 			var success = false;
 			console.log('Controller Level, Out of Range, Upgrader');
 		}
+		
 		
 		if(temp == 0){
 			var success = true;

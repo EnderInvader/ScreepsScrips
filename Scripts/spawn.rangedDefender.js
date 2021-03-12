@@ -3,30 +3,36 @@
 var spawnRangedDefender = {
 
     /** @param {Creep} creep **/
-    run: function(spawn, Slevel) {	
+    run: function(spawn, OSlevel) {	
 	    var room = spawn.room;
 		var controller = room.controller;
 		var controllerLevel = controller.level;
 		var rangedDefenders = _.filter(Game.creeps, (creep) => creep.memory.role == 'rangedDefender');
 		
-		var rangedDefendersLv1 = _.filter(rangedDefenders, (creep) => creep.memory.level == 1);
+		var rangedDefendersLv2 = _.filter(rangedDefenders, (creep) => creep.memory.level == 2);
 		var success = true;
 		var temp = 0;
 		var error = "";
 		
-		var OSlevel = 1;
-		
-		if (OSlevel != 0){
-		    Slevel = OSlevel;
+		if (spawn.room.controller.safeMode > 2000) {
+		    var success = false;
+			var error = 'Safe Mode Active, Not Needed';
+			var temp = -99;
 		}
 		
-		/**Starter Ranged Defender, Level 1**///300
-		if (Slevel == 1) {//controllerLevel == 1
+		else if (OSlevel == 1) {
+		    var success = false;
+			var error = 'No Ranged Defenders Level 1';
+			var temp = -99;
+		}
+		
+		/**Starter Ranged Defender, Level 2**///300
+		else if (OSlevel == 2) {//controllerLevel == 1
 		    if(rangedDefenders.length < 3 && !spawn.spawning) {
 				if(room.energyAvailable >= 450) {
 				    var newName = 'RangedDefender' + Game.time;
 				    console.log('Spawning new ranged defender: ' + newName);
-				    var temp = spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,RANGED_ATTACK,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'rangedDefender' , level:1} } );//400
+				    var temp = spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,RANGED_ATTACK,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'rangedDefender' , level:2} } );//400
 			    }
 			    else
 			    {

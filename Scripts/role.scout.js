@@ -9,7 +9,7 @@ var roleScout = {
         var searchRoom = creep.memory.target //target room
         
         if(creep.room.name != searchRoom) {
-            creep.moveTo(new RoomPosition(25, 25, searchRoom), {reusePath: 50, visualizePathStyle: {stroke: '#ffffff'}});
+            creep.moveTo(new RoomPosition(25, 25, searchRoom), {reusePath: 50, ignoreCreeps: false, visualizePathStyle: {stroke: '#ffffff'}});
         }
         else {
             const targetCreeps = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
@@ -37,8 +37,15 @@ var roleScout = {
 	    for(var i in Memory.targetRooms) {
             var targetRoom = Memory.targetRooms[i];
             if (searchRoom == targetRoom.name) {
-                targetRoom.enemyState = newState;
-                targetRoom.reserved = Game.rooms[searchRoom].controller.reservation;
+                if (targetRoom.enemyState != 3) {
+                    targetRoom.enemyState = newState;
+                }
+                if (Game.rooms[searchRoom].controller) {
+                    targetRoom.reserved = Game.rooms[searchRoom].controller.reservation;
+                }
+                else {
+                    targetRoom.reserved = null;
+                }
                 targetRoom.lastScan = Game.time;
                 return i;
             }

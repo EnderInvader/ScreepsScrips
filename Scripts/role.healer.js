@@ -1,7 +1,7 @@
 var roleHealer = {
 
     /** @param {Creep} creep **/
-    run: function(creep, controllerlevel) {		
+    run: function(creep) {		
 	    const target = creep.pos.findClosestByRange(FIND_MY_CREEPS, {
             filter: function(object) {
                 return object.hits < object.hitsMax;

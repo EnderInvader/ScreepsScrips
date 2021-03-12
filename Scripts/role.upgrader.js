@@ -1,7 +1,10 @@
 var roleUpgrader = {
 
     /** @param {Creep} creep **/
-    run: function(creep, controllerlevel) {
+    run: function(creep) {
+        spawn = creep.room.find(FIND_MY_SPAWNS)[0];
+        var OSlevel = spawn.memory.OSlevel;
+        
         if(creep.memory.upgrading && creep.carry.energy == 0) {
             creep.memory.upgrading = false;
             creep.say('harvest');
@@ -13,15 +16,15 @@ var roleUpgrader = {
 
 	    if(creep.memory.upgrading) {
 	        var signText = "no touchy";
-	        if(creep.room.controller.sign.text != signText) {
+	        if(creep.room.controller.sign == null || creep.room.controller.sign.text != signText) {
 	            if(creep.signController(creep.room.controller, signText) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
 	        }
 	        
             else if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
-            }
+                creep.moveTo(creep.room.controller, {reusePath: 50, visualizePathStyle: {stroke: '#ffffff'}});
+            }//creep.room.controller   , range: 3
         }
         else {
             var targets = creep.room.find(FIND_STRUCTURES, {
@@ -52,20 +55,25 @@ var roleUpgrader = {
 		
 		
 		
-		if(creep.memory.level > 1) {//creep.memory.level >= controllerlevel - 1
+		if(creep.memory.level >= OSlevel) {//creep.memory.level >= controllerlevel - 1
 			if(creep.ticksToLive <= 600 || creep.memory.renewing) {
-			    creep.memory.renewing = true;
+				creep.memory.renewing = true;
 				if (!Game.spawns['Spawn1'].spawning) {
-                    creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#00ff00'}})
-                }
-                else {
-                    creep.moveTo(Game.flags.IdleCreeps, {visualizePathStyle: {stroke: '#00ff00'}})
-                }
+					creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#00ff00'}})
+				}
+				else {
+					creep.moveTo(Game.flags.IdleCreeps, {visualizePathStyle: {stroke: '#00ff00'}})
+				}
 				creep.say('renew');
 			}
 			if(creep.memory.renewing && creep.ticksToLive >= 1400)
 			{
-			    creep.memory.renewing = false;
+				creep.memory.renewing = false;
+			}
+		}
+		else {
+		    if(creep.ticksToLive <= 1000) {
+				creep.memory.role = "recycle";
 			}
 		}
 	}

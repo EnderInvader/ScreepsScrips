@@ -3,28 +3,19 @@
 var spawnBuilder = {
 
     /** @param {Creep} creep **/
-    run: function(spawn, Slevel) {	
+    run: function(spawn, OSlevel) {	
 	    var room = spawn.room;
 		var controller = room.controller;
 		var controllerLevel = controller.level;
 		var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
 		
-		var buildersLv1 = _.filter(builders, (creep) => creep.memory.level == 1);
-		var buildersLv2 = _.filter(builders, (creep) => creep.memory.level == 2);
-		var buildersLv3 = _.filter(builders, (creep) => creep.memory.level == 3);
 		var success = true;
 		var temp = 0;
 		var error = "";
 		
-		var OSlevel = 0;
-		
-		if (OSlevel != 0){
-		    Slevel = OSlevel;
-		}
-		
 		/**Starter Builder, Level 1**///300
-		if (Slevel == 1) {
-			if(buildersLv1.length < 2) {
+		if (OSlevel == 1) {
+			if(builders.length < 2) {
 			    if(room.energyAvailable >= 250) {
 				    var newName = 'StarterBuilder' + Game.time;
 				    console.log('Spawning new builder: ' + newName);
@@ -39,8 +30,8 @@ var spawnBuilder = {
 		}
 		
 		/**Basic Builder, Level 2**///550
-		else if (Slevel == 2) {
-			if(buildersLv2.length < 2) {
+		else if (OSlevel == 2) {
+			if(builders.length < 2) {
 			    if(room.energyAvailable >= 450) {
 				    var newName = 'BasicBuilder' + Game.time;
 				    console.log('Spawning new builder: ' + newName);
@@ -55,8 +46,8 @@ var spawnBuilder = {
 		}
 		
 		/**Basic Builder, Level 3**///800
-		else if (Slevel == 3) {
-			if(buildersLv3.length < 2) {
+		else if (OSlevel == 3) {
+			if(builders.length < 2) {
 			    if(room.energyAvailable >= 750) {
 				    var newName = 'AdvancedBuilder' + Game.time;
 				    console.log('Spawning new builder: ' + newName);

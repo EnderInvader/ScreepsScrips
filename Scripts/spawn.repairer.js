@@ -3,7 +3,7 @@
 var spawnRepairer = {
 
     /** @param {Creep} creep **/
-    run: function(spawn, Slevel) {	
+    run: function(spawn, OSlevel) {	
 	    var room = spawn.room;
 		var controller = room.controller;
 		var controllerLevel = controller.level;
@@ -16,14 +16,8 @@ var spawnRepairer = {
 		var temp = 0;
 		var error = "";
 		
-		var OSlevel = 0;
-		
-		if (OSlevel != 0){
-		    Slevel = OSlevel;
-		}
-		
 		/**Starter Repairer, Level 1**///300
-		if (Slevel == 1) {
+		if (OSlevel == 1) {
 			if(repairersLv1.length < 1) {
 			    if(room.energyAvailable >= 250) {
 				    var newName = 'StarterRepairer' + Game.time;
@@ -39,7 +33,7 @@ var spawnRepairer = {
 		}
 		
 		/**Basic Repairer, Level 2**///550
-		else if (Slevel == 2) {
+		else if (OSlevel == 2) {
 			if(repairersLv2.length < 1) {
 			    if(room.energyAvailable >= 500) {
 				    var newName = 'BasicRepairer' + Game.time;
@@ -55,7 +49,7 @@ var spawnRepairer = {
 		}
 		
 		/**Basic Repairer, Level 3**///800
-		else if (Slevel == 3) {
+		else if (OSlevel == 3) {
 			if(repairersLv3.length < 2) {
 			    if(room.energyAvailable >= 650) {
 				    var newName = 'AdvancedRepairer' + Game.time;

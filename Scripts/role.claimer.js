@@ -9,7 +9,7 @@ var roleClaimer = {
         var targetRoom = creep.memory.target //target room
         
         if(creep.room.name != targetRoom) {
-            creep.moveTo(new RoomPosition(25, 25, targetRoom), {reusePath: 50, ignoreCreeps: true, visualizePathStyle: {stroke: '#ffffff'}});
+            creep.moveTo(new RoomPosition(25, 25, targetRoom), {reusePath: 50, ignoreCreeps: false, visualizePathStyle: {stroke: '#ffffff'}});
             creep.memory.claimState = -1;
         }
         else if (creep.memory.claimState == -1) {

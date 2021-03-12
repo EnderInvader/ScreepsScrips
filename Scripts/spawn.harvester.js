@@ -3,11 +3,12 @@
 var spawnHarvester = {
 
     /** @param {Creep} creep **/
-    run: function(spawn, Slevel) {	
+    run: function(spawn, OSlevel) {	
 	    var room = spawn.room;
 		var controller = room.controller;
 		var controllerLevel = controller.level;
 		var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
+		var charvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'charvester');
 		
 		var harvestersLv1 = _.filter(harvesters, (creep) => creep.memory.level == 1);
 		var harvestersLv2 = _.filter(harvesters, (creep) => creep.memory.level == 2);
@@ -16,14 +17,8 @@ var spawnHarvester = {
 		var temp = 0;
 		var error = "";
 		
-		var OSlevel = 0;
-		
-		if (OSlevel != 0){
-		    Slevel = OSlevel;
-		}
-		
 		/**Starter Harvester, Level 1**///300
-		if (Slevel == 1) {//controllerLevel == 1
+		if (OSlevel == 1) {//controllerLevel == 1
 			if(harvestersLv1.length < 2) {
 			    if(room.energyAvailable >= 250) {
 				    var newName = 'StarterHarvester' + Game.time;
@@ -43,7 +38,7 @@ var spawnHarvester = {
 		}
 		
 		/**Basic Harvester, Level 2**///550
-		else if (Slevel == 2) {
+		else if (OSlevel == 2) {
 			if(harvestersLv2.length < 4) {
 			    if(room.energyAvailable >= 500) {
 				    var newName = 'BasicHarvester' + Game.time;
@@ -62,8 +57,8 @@ var spawnHarvester = {
 			}
 		}
 		
-		/**Basic Harvester, Level 3**///800
-		else if (Slevel == 3) {
+		/**Advanced Harvester, Level 3**///800
+		else if (OSlevel == 3) {
 			if(harvestersLv3.length < 4) {
 			    if(room.energyAvailable >= 700) {
 				    var newName = 'AdvancedHarvester' + Game.time;
