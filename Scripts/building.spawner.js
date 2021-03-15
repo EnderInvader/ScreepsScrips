@@ -190,13 +190,8 @@ var buildingSpawner = {
                     goals.push({pos:sources[j].pos,range:4});
                 }
 
-                goals.push({pos:spawner.memory.IdleCreeps,range:3});
-                goals.push({pos:spawner.memory.IdleDefenders,range:3});
-
-                var path = PathFinder.search(spawner.pos, goals,{flee:true}).path;
-                spawner.room.createConstructionSite(path[path.length - 1].x,path[path.length - 1].y, STRUCTURE_TOWER);
-
-                goals.push({pos:path[path.length - 1],range:3});
+                //goals.push({pos:spawner.memory.IdleCreeps,range:3});
+                //goals.push({pos:spawner.memory.IdleDefenders,range:3});
 
                 var path = PathFinder.search(spawner.pos, goals,{flee:true}).path;
                 spawner.room.createConstructionSite(path[path.length - 1].x,path[path.length - 1].y, STRUCTURE_TOWER);
@@ -241,11 +236,7 @@ var buildingSpawner = {
 
                 for (var i = 0; i < circle.length; i++)
                 {
-                    var terrain = creep.room.lookForAt(LOOK_TERRAIN, circle[i]);
-
-                    if (terrain[0].terrain != 'wall') {
-                        spawner.room.createConstructionSite(circle[i].x,circle[i].y, STRUCTURE_RAMPART);
-                    }
+                    spawner.room.createConstructionSite(circle[i].x,circle[i].y, STRUCTURE_RAMPART);
                 }
 
                 //walls and ramparts on outside

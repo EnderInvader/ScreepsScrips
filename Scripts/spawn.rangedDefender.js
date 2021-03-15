@@ -27,12 +27,12 @@ var spawnRangedDefender = {
 		}
 		
 		/**Starter Ranged Defender, Level 2**///300
-		else if (OSlevel == 2) {//controllerLevel == 1
+		else if (OSlevel >= 2) {//controllerLevel == 1
 		    if(rangedDefenders.length < 3 && !spawn.spawning) {
 				if(room.energyAvailable >= 450) {
 				    var newName = 'RangedDefender' + Game.time;
 				    console.log('Spawning new ranged defender: ' + newName);
-				    var temp = spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,RANGED_ATTACK,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'rangedDefender' , level:2} } );//400
+				    var temp = spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,RANGED_ATTACK,MOVE,MOVE,MOVE,MOVE],newName,{ memory: { role: 'rangedDefender' , level:OSlevel} } );//400
 			    }
 			    else
 			    {

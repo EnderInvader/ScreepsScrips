@@ -79,7 +79,7 @@ var roleHauler = {
 			}).length){
 				creep.say("dropped");
 				creep.room.find(FIND_DROPPED_RESOURCES).forEach(resourceDrop => {
-					if(creep.pickup(resourceDrop) == ERR_NOT_IN_RANGE && resourceDrop > 2) {
+					if(creep.pickup(resourceDrop) == ERR_NOT_IN_RANGE) {
 						creep.moveTo(resourceDrop, {reusePath: 10, visualizePathStyle: {stroke: '#ff0000'}});
 					}
 				});
