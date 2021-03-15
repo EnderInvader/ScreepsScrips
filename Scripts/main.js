@@ -55,15 +55,15 @@ module.exports.loop = function () {
 			var spawnHarvesters = spawnHarvester.spawnHarvester.run(spawn, spawn.memory.OSlevel);
 			
 			if(spawnHarvesters == -99){
-			    var spawnBuilders = spawnBuilder.spawnBuilder.run(spawn, spawn.memory.OSlevel);
+			    var spawnHaulers = spawnHauler.spawnHauler.run(spawn, spawn.memory.OSlevel);
 				
-				if(spawnBuilders == -99){
-				    var spawnRepairers = spawnRepairer.spawnRepairer.run(spawn, spawn.memory.OSlevel);
+				if(spawnHaulers == -99){
+				    var spawnBuilders = spawnBuilder.spawnBuilder.run(spawn, spawn.memory.OSlevel);
 					
-					if(spawnRepairers == -99){
-					    var spawnHaulers = spawnHauler.spawnHauler.run(spawn, spawn.memory.OSlevel);
+					if(spawnBuilders == -99){
+					    var spawnRepairers = spawnRepairer.spawnRepairer.run(spawn, spawn.memory.OSlevel);
 						
-						if(spawnHaulers == -99){
+						if(spawnRepairers == -99){
 						    var spawnUpgraders = spawnUpgrader.spawnUpgrader.run(spawn, spawn.memory.OSlevel);
 							
 							if(spawnUpgraders == -99){
@@ -202,9 +202,9 @@ module.exports.loop = function () {
 
 
 
-    startTick = 20032995;
-    startLaunch = 41565;
-    timeRemaining = startLaunch - (Game.time - startTick);
+    //startTick = 20032995;
+    //startLaunch = 41565;
+    //timeRemaining = startLaunch - (Game.time - startTick);
     //console.log('Nuke landing in ' + timeRemaining + '   ' + (timeRemaining * 3.1) + 's');
 }
 

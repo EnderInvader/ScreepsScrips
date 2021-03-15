@@ -42,7 +42,7 @@ var buildingSpawner = {
             if ((extensions.length + constructions.length) < extensionLevels[spawner.room.controller.level]) {
                 console.log("trying to build");
                 if ((extensions.length + constructions.length) < 12) {
-                    circle = [
+                    var circle = [
                         {x:spawner.pos.x+1,y:spawner.pos.y+2},
                         {x:spawner.pos.x,y:spawner.pos.y+2},
                         {x:spawner.pos.x-1,y:spawner.pos.y+2},
@@ -63,10 +63,8 @@ var buildingSpawner = {
                     var num = 0;
                     for (var i = 0; i < circle.length; i++)
                     {
-                        look = creep.room.lookForAt(LOOK_STRUCTURES && LOOK_CONSTRUCTION_SITES, circle[i]);
-
-                        if (look.length == 0) {
-                            spawner.room.createConstructionSite(circle[i].x,circle[i].y, STRUCTURE_EXTENSION);
+                        var site = spawner.room.createConstructionSite(circle[i].x,circle[i].y, STRUCTURE_EXTENSION);
+                        if (site == 0) {
                             num++;
                         }
 
@@ -93,13 +91,13 @@ var buildingSpawner = {
             case 1:
                 console.log("REFIT ROOM, 1");
 
-                goals = [{pos:spawner.pos,range:5}];
+                var goals = [{pos:spawner.pos,range:5}];
 
                 //roads from spawn to sources
                 var sources = spawner.room.find(FIND_SOURCES);
                 for (var j = 0; j < sources.length; j++)
                 {
-                    path = spawner.pos.findPathTo(sources[j].pos);
+                    var path = spawner.pos.findPathTo(sources[j].pos);
                     for (var i = 2; i < (path.length - 2); i++)
                     {
                         spawner.room.createConstructionSite(path[i].x,path[i].y, STRUCTURE_ROAD);
@@ -110,16 +108,16 @@ var buildingSpawner = {
                 }
                 
                 //place idle creeps flag
-                path = PathFinder.search(spawner.pos, goals,{flee:true}).path;
+                var path = PathFinder.search(spawner.pos, goals,{flee:true}).path;
                 spawner.room.memory.IdleCreeps = path[path.length - 1];
 
                 goals.push({pos:path[path.length - 1],range:3});
 
-                path = PathFinder.search(spawner.pos, goals,{flee:true}).path;
+                var path = PathFinder.search(spawner.pos, goals,{flee:true}).path;
                 spawner.room.memory.IdleDefenders = path[path.length - 1];
 
                 //roads around spawn
-                circle = [
+                var circle = [
                     {x:spawner.pos.x+1,y:spawner.pos.y+1},
                     {x:spawner.pos.x,y:spawner.pos.y+1},
                     {x:spawner.pos.x-1,y:spawner.pos.y+1},
@@ -153,37 +151,38 @@ var buildingSpawner = {
                 }
 
                 //roads to controller
-                path = spawner.pos.findPathTo(spawner.room.controller.pos);
+                var path = spawner.pos.findPathTo(spawner.room.controller.pos);
                 for (var i = 2; i < (path.length - 1); i++)
                 {
                     spawner.room.createConstructionSite(path[i].x,path[i].y, STRUCTURE_ROAD);
                 }
 
                 //roads to IdleCreeps flag
-                path = spawner.pos.findPathTo(new RoomPosition(spawner.room.memory.IdleCreeps.x,spawner.room.memory.IdleCreeps.y,spawner.room.memory.IdleCreeps.roomName));
+                var path = spawner.pos.findPathTo(new RoomPosition(spawner.room.memory.IdleCreeps.x,spawner.room.memory.IdleCreeps.y,spawner.room.memory.IdleCreeps.roomName));
                 for (var i = 2; i < (path.length - 1); i++)
                 {
                     spawner.room.createConstructionSite(path[i].x,path[i].y, STRUCTURE_ROAD);
                 }
 
                 //roads to IdleDefenders flag
-                path = spawner.pos.findPathTo(new RoomPosition(spawner.room.memory.IdleDefenders.x,spawner.room.memory.IdleDefenders.y,spawner.room.memory.IdleDefenders.roomName));
+                var path = spawner.pos.findPathTo(new RoomPosition(spawner.room.memory.IdleDefenders.x,spawner.room.memory.IdleDefenders.y,spawner.room.memory.IdleDefenders.roomName));
                 for (var i = 2; i < (path.length - 1); i++)
                 {
                     spawner.room.createConstructionSite(path[i].x,path[i].y, STRUCTURE_ROAD);
                 }
                 
                 //containers in front of sources
+                var sources = spawner.room.find(FIND_SOURCES);
                 for (var j = 0; j < sources.length; j++)
                 {
-                    path = spawner.pos.findPathTo(sources[j].pos);
+                    var path = spawner.pos.findPathTo(sources[j].pos);
                     spawner.room.createConstructionSite(path[path.length - 2].x,path[path.length - 2].y, STRUCTURE_CONTAINER);
                 }
               break;
               
             case 3:
                 //building towers
-                goals = [{pos:spawner.pos,range:4}];
+                var goals = [{pos:spawner.pos,range:4}];
 
                 var sources = spawner.room.find(FIND_SOURCES);
                 for (var j = 0; j < sources.length; j++)
@@ -194,16 +193,16 @@ var buildingSpawner = {
                 goals.push({pos:spawner.memory.IdleCreeps,range:3});
                 goals.push({pos:spawner.memory.IdleDefenders,range:3});
 
-                path = PathFinder.search(spawner.pos, goals,{flee:true}).path;
+                var path = PathFinder.search(spawner.pos, goals,{flee:true}).path;
                 spawner.room.createConstructionSite(path[path.length - 1].x,path[path.length - 1].y, STRUCTURE_TOWER);
 
                 goals.push({pos:path[path.length - 1],range:3});
 
-                path = PathFinder.search(spawner.pos, goals,{flee:true}).path;
+                var path = PathFinder.search(spawner.pos, goals,{flee:true}).path;
                 spawner.room.createConstructionSite(path[path.length - 1].x,path[path.length - 1].y, STRUCTURE_TOWER);
 
                 //ramparts around spawner
-                circle = [
+                var circle = [
                     {x:spawner.pos.x+1,y:spawner.pos.y+1},
                     {x:spawner.pos.x,y:spawner.pos.y+1},
                     {x:spawner.pos.x-1,y:spawner.pos.y+1},
@@ -227,7 +226,7 @@ var buildingSpawner = {
                 }
 
                 //ramparts around controller
-                circle = [
+                var circle = [
                     {x:spawner.room.controller.pos.x+1,y:spawner.room.controller.pos.y+1},
                     {x:spawner.room.controller.pos.x,y:spawner.room.controller.pos.y+1},
                     {x:spawner.room.controller.pos.x-1,y:spawner.room.controller.pos.y+1},
@@ -242,7 +241,7 @@ var buildingSpawner = {
 
                 for (var i = 0; i < circle.length; i++)
                 {
-                    terrain = creep.room.lookForAt(LOOK_TERRAIN, circle[i]);
+                    var terrain = creep.room.lookForAt(LOOK_TERRAIN, circle[i]);
 
                     if (terrain[0].terrain != 'wall') {
                         spawner.room.createConstructionSite(circle[i].x,circle[i].y, STRUCTURE_RAMPART);

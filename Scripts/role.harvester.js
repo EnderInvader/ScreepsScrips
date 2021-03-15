@@ -2,7 +2,7 @@ var roleHarvester = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-        spawn = creep.room.find(FIND_MY_SPAWNS)[0];
+        var spawn = creep.room.find(FIND_MY_SPAWNS)[0];
         var OSlevel = spawn.memory.OSlevel;
         
         if(!creep.memory.Csource){
@@ -179,7 +179,10 @@ var roleHarvester = {
 		}
 		else {
 		    if(creep.ticksToLive <= 1000) {
-				creep.memory.role = "recycle";
+                var haulers = _.filter(Game.creeps, (creep) => creep.memory.role == 'hauler');
+                if (haulers > 0) {
+				    creep.memory.role = "recycle";
+                }
 			}
 		}
     }
