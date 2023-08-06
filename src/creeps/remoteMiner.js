@@ -75,8 +75,8 @@ var roleRemoteMiner = {
 			let targets = [...creep.room.memory.sourceSpots];
 			
 			var remoteMiners = _.filter(Game.creeps, (search) => search.memory.role == 'remoteMiner' && search.room.name == creep.room.name && search.name != creep.name);
-			for (let miner of remoteMiners) {
-				const index = targets.findIndex(pos => _.isEqual(pos, miner.memory.target));
+			for (let remoteMiner of remoteMiners) {
+				const index = targets.findIndex(pos => _.isEqual(pos, remoteMiner.memory.target));
 				if (index > -1) targets.splice(index, 1);
 			}
 

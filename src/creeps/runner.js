@@ -67,6 +67,13 @@ var roleRunner = {
 			_.forEach(tombstones, function(tombstone) {
 				if (creep.withdraw(tombstone, RESOURCE_ENERGY) === OK) creep.memory.status = roleRunner.status.working;
 			});
+
+			let ruins = creep.pos.findInRange(FIND_RUINS, 1, {
+				filter: (i) => i.store[RESOURCE_ENERGY] > 0
+			});
+			_.forEach(ruins, function(ruin) {
+				if (creep.withdraw(ruin, RESOURCE_ENERGY) === OK) creep.memory.status = roleRunner.status.working;
+			});
 		}
 	},
 	

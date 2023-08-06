@@ -1,9 +1,7 @@
 var extension = {
 
 	/** @param {Structure} structure **/
-	run: function(structure) {
-		// TODO
-	},
+	run: function(structure) {},
 };
 
 module.exports = extension;

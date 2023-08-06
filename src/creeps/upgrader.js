@@ -29,10 +29,27 @@ var roleUpgrader = {
 		let status = creep.memory.status;
 
 		if (status === this.status.filling) {
-			var remoteMiners = _.filter(Game.creeps, (search) => search.memory.role == 'remoteMiner' && search.room.name == creep.room.name && search.store[RESOURCE_ENERGY] > 0);
-			remoteMiners.sort((a, b) => creep.pos.findPathTo(a.pos.x, a.pos.y, {ignoreCreeps: true}).length - creep.pos.findPathTo(b.pos.x, b.pos.y, {ignoreCreeps: true}).length);
-			if (remoteMiners[0].transfer(creep, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-				creep.moveTo(remoteMiners[0]);
+			let storage = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+				filter: (i) => (
+								i.structureType == STRUCTURE_CONTAINER ||
+								i.structureType == STRUCTURE_STORAGE
+							   ) &&
+							   i.store[RESOURCE_ENERGY] > 0
+			});
+
+			if (storage) {
+				if (creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+					creep.moveTo(storage);
+				}
+			}
+			else {
+				var remoteMiners = _.filter(Game.creeps, (search) => search.memory.role == 'remoteMiner' && search.room.name == creep.room.name && search.store[RESOURCE_ENERGY] / search.store.getCapacity(RESOURCE_ENERGY) > 0.4);
+				remoteMiners.sort((a, b) => creep.pos.findPathTo(a.pos.x, a.pos.y, {ignoreCreeps: true}).length - creep.pos.findPathTo(b.pos.x, b.pos.y, {ignoreCreeps: true}).length);
+				//remoteMiners.sort((a, b) => b.store[RESOURCE_ENERGY] - a.store[RESOURCE_ENERGY]);
+				//remoteMiners.sort((a, b) => (creep.pos.findPathTo(a.pos.x, a.pos.y, {ignoreCreeps: true}).length - (10 * a.store[RESOURCE_ENERGY] / a.store.getCapacity[RESOURCE_ENERGY])) - (creep.pos.findPathTo(b.pos.x, b.pos.y, {ignoreCreeps: true}).length - (10 * b.store[RESOURCE_ENERGY] / b.store.getCapacity[RESOURCE_ENERGY])));
+				if (remoteMiners[0] && remoteMiners[0].transfer(creep, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+					creep.moveTo(remoteMiners[0]);
+				}
 			}
 		}
 		else if (status === this.status.working) {
@@ -51,7 +68,7 @@ var roleUpgrader = {
 		var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader' && creep.room.name == room.name);
 		//console.log(room, 'Upgraders: ' + upgraders.length);
 
-		if (upgraders.length < 2) {
+		if (upgraders.length < 4) {
 			return true;
 		}
 	},

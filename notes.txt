@@ -10,36 +10,6 @@ Level 6 - 2300
 Level 7 - 5300
 Level 8 - 12300
 
-Highest Priced Creep
-Level 1 - 200
-Level 2 - 450
-Level 3 - 650
-Level 4 - 
-Level 5 - 
-Level 6 - 
-Level 7 - 
-Level 8 - 
-
-
-
-
-TODO:
-add healing to attacker?
-long distance mining
-auto recycle
-automatic slevel
-slevel 4 and 5 bots
-set up auto claimer spawn to be able to spawn claimers targeted to two different rooms
-
-
-DONE:
-scout bot
-autospawning of scouts
-place two claim parts on claimer bot
-autospawning of claimers
-targeted room attack
-rebalance attack 1 move for every other part
-
 
 
 

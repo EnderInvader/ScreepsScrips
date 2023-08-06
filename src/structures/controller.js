@@ -2,7 +2,7 @@ var controller = {
 
 	/** @param {Structure} structure **/
 	run: function(structure) {
-		// TODO
+		// TODO: safe mode?
 	},
 };
 

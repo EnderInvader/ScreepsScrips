@@ -69,6 +69,16 @@ global.resetRoomMem = function(name = undefined) {
 }
 
 
+function placeFlags() {
+	_.forEach(Game.flags, function(flag) {
+		if (flag.name.toLowerCase().startsWith('[place]')) {
+			flag.name = flag.name.toLowerCase().replace('[place]', `[${flag.room.name}]`);
+			console.log(flag.room, "Flag", flag.name);
+		}
+	});
+}
+
+
 module.exports.loop = function() {
 	console.log('--------------', Game.time, Game.cpu.bucket, '--------------');
 	for (var name in Memory.creeps) {
@@ -88,6 +98,7 @@ module.exports.loop = function() {
 			if (nuke.timeToLand === 49950) Game.notify(`${room} NUKE ${nuke.timeToLand} ${nuke.launchRoomName}`);
 		});
 	});
+	placeFlags();
 	for (let name in Game.structures) {
 		let structure = Game.structures[name];
 
@@ -111,10 +122,10 @@ module.exports.loop = function() {
 		}
 	}
 
-	if (Game.cpu.bucket == 10000) {
+	if (Game.cpu.bucket >= 10000) {
 		if (Game.cpu.generatePixel() === OK) {
 			console.log("[game] PixelGenerated", Game.resources.pixel + 1);
-			Game.notify(`[game] PixelGenerated ${Game.resources.pixel + 1}`);
+			if ((Game.resources.pixel + 1) % 100 === 0) Game.notify(`[game] PixelGenerated % 100 ${Game.resources.pixel + 1}`);
 		}
 	}
 }
@@ -125,10 +136,11 @@ return module.exports;
 __modules[1] = function(module, exports) {
 let creepLogic = {
 	recycle: __require(5,1),
-	runner: __require(6,1),
-	remoteMiner: __require(7,1),
-	builder: __require(8,1),
-	upgrader: __require(9,1),
+	staticManager: __require(6,1),
+	runner: __require(7,1),
+	remoteMiner: __require(8,1),
+	builder: __require(9,1),
+	upgrader: __require(10,1),
 }
 
 module.exports = creepLogic;
@@ -148,9 +160,9 @@ function roomMain(room) {
 
 let roomLogic = {
 	main: roomMain,
-	evaluate: __require(10,2),
-	spawning: __require(11,2),
-	building: __require(12,2),
+	evaluate: __require(11,2),
+	spawning: __require(12,2),
+	building: __require(13,2),
 }
 
 module.exports = roomLogic;
@@ -160,9 +172,9 @@ return module.exports;
 /********** Start module 3: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\index.js **********/
 __modules[3] = function(module, exports) {
 let structureLogic = {
-	[STRUCTURE_CONTROLLER]: __require(13,3),
-	[STRUCTURE_SPAWN]: __require(14,3),
-	[STRUCTURE_EXTENSION]: __require(15,3),
+	[STRUCTURE_CONTROLLER]: __require(14,3),
+	[STRUCTURE_SPAWN]: __require(15,3),
+	[STRUCTURE_EXTENSION]: __require(16,3),
 }
 
 module.exports = structureLogic;
@@ -172,8 +184,8 @@ return module.exports;
 /********** Start module 4: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\prototypes\index.js **********/
 __modules[4] = function(module, exports) {
 let files = {
-	room: __require(16,4),
-	creep: __require(17,4),
+	room: __require(17,4),
+	creep: __require(18,4),
 }
 return module.exports;
 }
@@ -232,8 +244,99 @@ module.exports = roleRecycle;
 return module.exports;
 }
 /********** End of module 5: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\recycle.js **********/
-/********** Start module 6: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\runner.js **********/
+/********** Start module 6: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\staticManager.js **********/
 __modules[6] = function(module, exports) {
+var roleStaticManager = {
+	status: {
+		idle: 0,
+	},
+
+	/** @param {Creep} creep **/
+	statusState: function(creep) {
+		if (creep.store[RESOURCE_ENERGY] == 0) {
+			creep.memory.status = this.status.filling;
+		}
+		else if (creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
+			creep.memory.status = this.status.working;
+		}
+		else if (creep.memory.status === this.status.idle) {
+			if (creep.store[RESOURCE_ENERGY] > 0) creep.memory.status = this.status.working;
+		}
+	},
+
+	/** @param {Creep} creep **/
+	run: function(creep) {
+		if (creep.ticksToLive < 30) creep.memory.role = 'recycle';
+
+		this.memory(creep);
+
+		/** @type {number} */
+
+		let target = creep.room.getPositionAt(creep.memory.target.x, creep.memory.target.y);
+		if (!target.isEqualTo(creep.pos)) {
+			creep.moveTo(target);
+			return;
+		}
+	},
+	/** 
+	 * @param {Room} room
+	 * @param {StructureSpawn} spawn 
+	 */
+	spawn: function(room, spawn) {
+		var staticManagers = _.filter(Game.creeps, (creep) => creep.memory.role == 'staticManager' && creep.room.name == room.name);
+
+		if (Game.flags[`[${room.name}]RapidFillCluster`]) {
+			if (room.controller.level >= 4) {
+				if (staticManagers.length < 4) return true;
+			}
+			else {
+				if (staticManagers.length < 2) return true;
+			}
+		}
+	},
+	/** @param {Room} room **/
+	spawnData: function(room) {
+		let name = 'StaticManager' + Game.time;
+		let memory = {role: 'staticManager'};
+		let body = [CARRY,CARRY,CARRY,CARRY,MOVE]; // 250
+		
+		return {name, body, memory};
+	},
+	/** @param {Creep} creep **/
+	memory: function(creep) {
+		if (!creep.memory.status) {
+			creep.memory.status = this.status.working;
+		}
+
+		if (!creep.memory.target) {
+			const pos = Game.flags[`[${creep.room.name}]RapidFillCluster`].pos;
+
+			/** @type {{x: number; y: number;}[]} */
+			let targets = [
+				{x: pos.x - 1, y: pos.y + 1},
+				{x: pos.x + 1, y: pos.y + 1},
+				{x: pos.x - 1, y: pos.y - 1},
+				{x: pos.x + 1, y: pos.y - 1},
+			];
+			
+			var staticManagers = _.filter(Game.creeps, (search) => search.memory.role == 'staticManager' && search.room.name == creep.room.name && search.name != creep.name);
+			for (let staticManager of staticManagers) {
+				const index = targets.findIndex(pos => _.isEqual(pos, staticManager.memory.target));
+				if (index > -1) targets.splice(index, 1);
+			}
+
+			targets.sort((a, b) => creep.pos.findPathTo(a.x, a.y, {ignoreCreeps: true}).length - creep.pos.findPathTo(b.x, b.y, {ignoreCreeps: true}).length);
+			creep.memory.target = targets[0];
+		}
+	}
+};
+
+module.exports = roleStaticManager;
+return module.exports;
+}
+/********** End of module 6: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\staticManager.js **********/
+/********** Start module 7: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\runner.js **********/
+__modules[7] = function(module, exports) {
 var roleRunner = {
 	status: {
 		idle: 0,
@@ -303,6 +406,13 @@ var roleRunner = {
 			_.forEach(tombstones, function(tombstone) {
 				if (creep.withdraw(tombstone, RESOURCE_ENERGY) === OK) creep.memory.status = roleRunner.status.working;
 			});
+
+			let ruins = creep.pos.findInRange(FIND_RUINS, 1, {
+				filter: (i) => i.store[RESOURCE_ENERGY] > 0
+			});
+			_.forEach(ruins, function(ruin) {
+				if (creep.withdraw(ruin, RESOURCE_ENERGY) === OK) creep.memory.status = roleRunner.status.working;
+			});
 		}
 	},
 	/** 
@@ -364,9 +474,9 @@ var roleRunner = {
 module.exports = roleRunner;
 return module.exports;
 }
-/********** End of module 6: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\runner.js **********/
-/********** Start module 7: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\remoteMiner.js **********/
-__modules[7] = function(module, exports) {
+/********** End of module 7: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\runner.js **********/
+/********** Start module 8: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\remoteMiner.js **********/
+__modules[8] = function(module, exports) {
 var roleRemoteMiner = {
 
 	/** @param {Creep} creep **/
@@ -438,8 +548,8 @@ var roleRemoteMiner = {
 			let targets = [...creep.room.memory.sourceSpots];
 			
 			var remoteMiners = _.filter(Game.creeps, (search) => search.memory.role == 'remoteMiner' && search.room.name == creep.room.name && search.name != creep.name);
-			for (let miner of remoteMiners) {
-				const index = targets.findIndex(pos => _.isEqual(pos, miner.memory.target));
+			for (let remoteMiner of remoteMiners) {
+				const index = targets.findIndex(pos => _.isEqual(pos, remoteMiner.memory.target));
 				if (index > -1) targets.splice(index, 1);
 			}
 
@@ -452,9 +562,9 @@ var roleRemoteMiner = {
 module.exports = roleRemoteMiner;
 return module.exports;
 }
-/********** End of module 7: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\remoteMiner.js **********/
-/********** Start module 8: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\builder.js **********/
-__modules[8] = function(module, exports) {
+/********** End of module 8: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\remoteMiner.js **********/
+/********** Start module 9: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\builder.js **********/
+__modules[9] = function(module, exports) {
 var roleBuilder = {
 	status: {
 		idle: 0,
@@ -548,9 +658,9 @@ var roleBuilder = {
 module.exports = roleBuilder;
 return module.exports;
 }
-/********** End of module 8: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\builder.js **********/
-/********** Start module 9: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\upgrader.js **********/
-__modules[9] = function(module, exports) {
+/********** End of module 9: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\builder.js **********/
+/********** Start module 10: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\upgrader.js **********/
+__modules[10] = function(module, exports) {
 var roleUpgrader = {
 	status: {
 		idle: 0,
@@ -582,10 +692,25 @@ var roleUpgrader = {
 		let status = creep.memory.status;
 
 		if (status === this.status.filling) {
-			var remoteMiners = _.filter(Game.creeps, (search) => search.memory.role == 'remoteMiner' && search.room.name == creep.room.name && search.store[RESOURCE_ENERGY] > 0);
-			remoteMiners.sort((a, b) => creep.pos.findPathTo(a.pos.x, a.pos.y, {ignoreCreeps: true}).length - creep.pos.findPathTo(b.pos.x, b.pos.y, {ignoreCreeps: true}).length);
-			if (remoteMiners[0].transfer(creep, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-				creep.moveTo(remoteMiners[0]);
+			let storage = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+				filter: (i) => (
+								i.structureType == STRUCTURE_CONTAINER ||
+								i.structureType == STRUCTURE_STORAGE
+							   ) &&
+							   i.store[RESOURCE_ENERGY] > 0
+			});
+
+			if (storage) {
+				if (creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+					creep.moveTo(storage);
+				}
+			}
+			else {
+				var remoteMiners = _.filter(Game.creeps, (search) => search.memory.role == 'remoteMiner' && search.room.name == creep.room.name && search.store[RESOURCE_ENERGY] / search.store.getCapacity(RESOURCE_ENERGY) > 0.4);
+				remoteMiners.sort((a, b) => creep.pos.findPathTo(a.pos.x, a.pos.y, {ignoreCreeps: true}).length - creep.pos.findPathTo(b.pos.x, b.pos.y, {ignoreCreeps: true}).length);
+				if (remoteMiners[0] && remoteMiners[0].transfer(creep, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+					creep.moveTo(remoteMiners[0]);
+				}
 			}
 		}
 		else if (status === this.status.working) {
@@ -601,7 +726,7 @@ var roleUpgrader = {
 	spawn: function(room, spawn) {
 		var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader' && creep.room.name == room.name);
 
-		if (upgraders.length < 2) {
+		if (upgraders.length < 4) {
 			return true;
 		}
 	},
@@ -630,10 +755,10 @@ var roleUpgrader = {
 module.exports = roleUpgrader;
 return module.exports;
 }
-/********** End of module 9: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\upgrader.js **********/
-/********** Start module 10: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\room\evaluate.js **********/
-__modules[10] = function(module, exports) {
-let creepLogic = __require(1,10);
+/********** End of module 10: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\creeps\upgrader.js **********/
+/********** Start module 11: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\room\evaluate.js **********/
+__modules[11] = function(module, exports) {
+let creepLogic = __require(1,11);
 let creepTypes = _.keys(creepLogic);
 
 /**
@@ -671,10 +796,10 @@ function emptyTerrain(room, pos) {
 module.exports = evaluateRoom;
 return module.exports;
 }
-/********** End of module 10: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\room\evaluate.js **********/
-/********** Start module 11: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\room\spawning.js **********/
-__modules[11] = function(module, exports) {
-let creepLogic = __require(1,11);
+/********** End of module 11: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\room\evaluate.js **********/
+/********** Start module 12: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\room\spawning.js **********/
+__modules[12] = function(module, exports) {
+let creepLogic = __require(1,12);
 let creepTypes = _.keys(creepLogic);
 
 /** @param {Room} room **/
@@ -715,19 +840,193 @@ function spawnCreeps(room) {
 module.exports = spawnCreeps;
 return module.exports;
 }
-/********** End of module 11: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\room\spawning.js **********/
-/********** Start module 12: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\room\building.js **********/
-__modules[12] = function(module, exports) {
+/********** End of module 12: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\room\spawning.js **********/
+/********** Start module 13: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\room\building.js **********/
+__modules[13] = function(module, exports) {
+// 0 - TODO: desc
+const RapidFillCluster = {
+	[STRUCTURE_SPAWN]:[
+		{x: 0,y: 2,p: 0},
+		{x:-2,y:-1,p: 1},
+		{x: 2,y:-1,p: 2},
+	],
+	[STRUCTURE_EXTENSION]:[
+		{x:-1,y: 2,p: 0},
+		{x: 1,y: 2,p: 1},
+		{x: 0,y: 1,p: 2},
+		{x:-1,y: 0,p: 3},
+		{x: 1,y: 0,p: 4},
+		{x:-2,y: 2,p: 5},
+		{x:-2,y: 1,p: 6},
+		{x: 2,y: 2,p: 7},
+		{x: 2,y: 1,p: 8},
+		{x: 0,y:-1,p: 9},
+		{x: 0,y:-2,p:10},
+		{x:-1,y:-2,p:11},
+		{x:-2,y:-2,p:12},
+		{x: 1,y:-2,p:13},
+		{x: 2,y:-2,p:14},
+	],
+	[STRUCTURE_CONTAINER]:[
+		{x:-2,y: 0,p: 0},
+		{x: 2,y: 0,p: 1},
+	],
+	[STRUCTURE_LINK]:[
+		{x: 0,y: 0,p: 0},
+	],
+}
+const AnchorCluster = {
+	[STRUCTURE_TERMINAL]:[
+		{x:-1,y: 0,p: 0}
+	],
+	[STRUCTURE_LINK]:[
+		{x:-1,y: 1,p: 0}
+	],
+	[STRUCTURE_NUKER]:[
+		{x: 0,y:-1,p: 0}
+	],
+	[STRUCTURE_STORAGE]:[
+		{x:-1,y:-1,p: 0}
+	],
+	[STRUCTURE_EXTENSION]:[
+		{x: 1,y: 0,p: 0},
+		{x: 1,y:-1,p: 1}
+	],
+	[STRUCTURE_FACTORY]:[
+		{x: 0,y: 1,p: 0}
+	],
+}
+const ExtensionCluster = {
+	[STRUCTURE_EXTENSION]:[
+		{x: 0,y: 0,p: 0},
+		{x:-1,y: 0,p: 1},
+		{x: 0,y: 1,p: 2},
+		{x: 0,y:-1,p: 3},
+		{x: 1,y: 0,p: 4},
+	],
+	[STRUCTURE_ROAD]:[
+		{x:-1,y:-1,p: 0},
+		{x:-1,y: 1,p: 1},
+		{x: 1,y: 1,p: 2},
+		{x: 1,y:-1,p: 3},
+		{x:-2,y: 0,p: 4},
+		{x: 0,y:-2,p: 5},
+		{x: 0,y: 2,p: 6},
+		{x: 2,y: 0,p: 7},
+	],
+}
+const LabCluster = {
+	[STRUCTURE_LAB]:[
+		{x: 0,y: 1,p: 0},
+		{x: 1,y: 0,p: 1},
+		{x: 1,y: 1,p: 2},
+		{x:-1,y: 0,p: 3},
+		{x: 0,y:-1,p: 4},
+		{x:-1,y:-1,p: 5},
+		{x:-1,y: 2,p: 6},
+		{x:-2,y: 1,p: 7},
+		{x: 0,y: 2,p: 8},
+		{x:-2,y: 0,p: 9},
+	],
+	[STRUCTURE_ROAD]:[
+		{x: 0,y: 0,p: 0},
+		{x:-1,y: 1,p: 1},
+		{x:-2,y: 2,p: 2},
+		{x: 1,y:-1,p: 3},
+	],
+}
+
+/**
+ * @param {Room} room
+ * @param {number} structureType
+ * @returns {{x:number,y:number}} Structure of structureType to build
+ */
+function buildPriority(room, structureType) {
+	let build;
+
+	const Flag_RapidFillCluster = Game.flags[`[${room.name}]RapidFillCluster`];
+	if (Flag_RapidFillCluster) {
+		_.forEach(RapidFillCluster[structureType], function(pos) {
+			const structure = room.lookForAt(LOOK_STRUCTURES, pos.x + Flag_RapidFillCluster.pos.x, pos.y + Flag_RapidFillCluster.pos.y).filter(found => found.structureType === structureType)[0];
+			if (structure) {
+				return true;
+			}
+			
+			const constructionSite = room.lookForAt(LOOK_CONSTRUCTION_SITES, pos.x + Flag_RapidFillCluster.pos.x, pos.y + Flag_RapidFillCluster.pos.y).filter(found => found.structureType === structureType)[0];
+			if (constructionSite) {
+				return true;
+			}
+
+			build = pos;
+			return false;
+		})
+		if (build) return {x:build.x + Flag_RapidFillCluster.pos.x, y:build.y + Flag_RapidFillCluster.pos.y};
+	}
+
+	const Flag_AnchorCluster = Game.flags[`[${room.name}]AnchorCluster`];
+	if (Flag_AnchorCluster) {
+		_.forEach(AnchorCluster[structureType], function(pos) {
+			const structure = room.lookForAt(LOOK_STRUCTURES, pos.x + Flag_AnchorCluster.pos.x, pos.y + Flag_AnchorCluster.pos.y).filter(found => found.structureType === structureType)[0];
+			if (structure) {
+				return true;
+			}
+			
+			const constructionSite = room.lookForAt(LOOK_CONSTRUCTION_SITES, pos.x + Flag_AnchorCluster.pos.x, pos.y + Flag_AnchorCluster.pos.y).filter(found => found.structureType === structureType)[0];
+			if (constructionSite) {
+				return true;
+			}
+
+			build = pos;
+			return false;
+		})
+		if (build) return {x:build.x + Flag_AnchorCluster.pos.x, y:build.y + Flag_AnchorCluster.pos.y};
+	}
+}
+
+const structurePriority = [
+	STRUCTURE_TOWER,
+	STRUCTURE_SPAWN,
+	STRUCTURE_EXTENSION,
+	STRUCTURE_STORAGE,
+	STRUCTURE_CONTAINER,
+	STRUCTURE_LINK,
+	STRUCTURE_TERMINAL,
+	STRUCTURE_FACTORY,
+	STRUCTURE_LAB,
+	STRUCTURE_OBSERVER,
+	STRUCTURE_NUKER,
+	STRUCTURE_POWER_SPAWN,
+	STRUCTURE_RAMPART,
+	STRUCTURE_ROAD,
+]
+
 /** @param {Room} room **/
 function buildStructures(room) {
+	_.forEach(structurePriority, function(structureType) {
+		if (room.controller.level < 3 && (structureType === STRUCTURE_TOWER)) return true;
+		if (room.controller.level < 4 && (structureType === STRUCTURE_STORAGE)) return true;
+		if (room.controller.level < 5 && (structureType === STRUCTURE_LINK)) return true;
+		if (room.controller.level < 6 && (structureType === STRUCTURE_LAB || structureType === STRUCTURE_TERMINAL)) return true;
+		if (room.controller.level < 7 && (structureType === STRUCTURE_SPAWN || structureType === STRUCTURE_FACTORY)) return true;
+		if (room.controller.level < 8 && (structureType === STRUCTURE_OBSERVER || structureType === STRUCTURE_NUKER || structureType === STRUCTURE_POWER_SPAWN)) return true;
+
+		const build = buildPriority(room, structureType);
+		if (build) {
+			const status = room.createConstructionSite(build.x, build.y, structureType);
+			if (status === OK) console.log(room, 'Build', structureType, JSON.stringify(build));
+			else if (status === ERR_INVALID_TARGET) console.log(room, 'Build', structureType, JSON.stringify(build), 'ERR_INVALID_TARGET');
+			else if (status === ERR_RCL_NOT_ENOUGH) console.log(room, 'Build', structureType, JSON.stringify(build), 'ERR_RCL_NOT_ENOUGH');
+			else console.log(room, 'Build', structureType, JSON.stringify(build), 'ERR', status);
+		}
+	})
 }
 
 module.exports = buildStructures;
 return module.exports;
 }
-/********** End of module 12: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\room\building.js **********/
-/********** Start module 13: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\controller.js **********/
-__modules[13] = function(module, exports) {
+/********** End of module 13: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\room\building.js **********/
+/********** Start module 14: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\controller.js **********/
+__modules[14] = function(module, exports) {
 var controller = {
 
 	/** @param {Structure} structure **/
@@ -738,26 +1037,52 @@ var controller = {
 module.exports = controller;
 return module.exports;
 }
-/********** End of module 13: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\controller.js **********/
-/********** Start module 14: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\spawn.js **********/
-__modules[14] = function(module, exports) {
+/********** End of module 14: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\controller.js **********/
+/********** Start module 15: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\spawn.js **********/
+__modules[15] = function(module, exports) {
 var spawn = {
 
 	/** @param {StructureSpawn} structure **/
 	run: function(structure) {
-		var recycles = _.filter(Game.creeps, (search) => search.memory.role == 'recycle' && search.room.name == structure.room.name && search.pos.isNearTo(structure.pos));
+		var recycles = _.filter(Game.creeps, (search) => search.memory.role == 'recycle' && search.room.name == structure.room.name && search.ticksToLive < 20 && search.pos.isNearTo(structure.pos));
 		recycles.sort((a, b) => a.ticksToLive - b.ticksToLive);
 		
 		if (structure.recycleCreep(recycles[0]) === OK) console.log(structure.room, 'Recycle', recycles[0].name);
+
+		if (structure.spawning && Game.flags[`[${structure.room.name}]RapidFillCluster`]) {
+			const flag = Game.flags[`[${structure.room.name}]RapidFillCluster`];
+
+			if (Game.creeps[structure.spawning.name].memory.role === 'staticManager' && structure.pos.isNearTo(Game.creeps[structure.spawning.name].memory.target.x, Game.creeps[structure.spawning.name].memory.target.y)) {
+				structure.spawning.setDirections([structure.pos.getDirectionTo(Game.creeps[structure.spawning.name].memory.target.x, Game.creeps[structure.spawning.name].memory.target.y)]);
+			}
+			else {
+				switch (structure.pos.getDirectionTo(flag.pos)) {
+					case TOP:
+						structure.spawning.setDirections([BOTTOM,BOTTOM_LEFT,BOTTOM_RIGHT]);
+						break;
+						
+					case BOTTOM_RIGHT:
+						structure.spawning.setDirections([LEFT,BOTTOM_LEFT,TOP_LEFT]);
+						break;
+						
+					case BOTTOM_LEFT:
+						structure.spawning.setDirections([RIGHT,BOTTOM_RIGHT,TOP_RIGHT]);
+						break;
+				
+					default:
+						break;
+				}
+			}
+		}
 	},
 };
 
 module.exports = spawn;
 return module.exports;
 }
-/********** End of module 14: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\spawn.js **********/
-/********** Start module 15: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\extension.js **********/
-__modules[15] = function(module, exports) {
+/********** End of module 15: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\spawn.js **********/
+/********** Start module 16: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\extension.js **********/
+__modules[16] = function(module, exports) {
 var extension = {
 
 	/** @param {Structure} structure **/
@@ -768,21 +1093,21 @@ var extension = {
 module.exports = extension;
 return module.exports;
 }
-/********** End of module 15: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\extension.js **********/
-/********** Start module 16: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\prototypes\room.js **********/
-__modules[16] = function(module, exports) {
+/********** End of module 16: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\structures\extension.js **********/
+/********** Start module 17: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\prototypes\room.js **********/
+__modules[17] = function(module, exports) {
 
 return module.exports;
 }
-/********** End of module 16: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\prototypes\room.js **********/
-/********** Start module 17: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\prototypes\creep.js **********/
-__modules[17] = function(module, exports) {
+/********** End of module 17: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\prototypes\room.js **********/
+/********** Start module 18: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\prototypes\creep.js **********/
+__modules[18] = function(module, exports) {
 Creep.prototype.sayHello = function sayHello() {
 	this.say("Hello", true);
 }
 return module.exports;
 }
-/********** End of module 17: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\prototypes\creep.js **********/
+/********** End of module 18: C:\Users\derek\OneDrive\Projects\ScreepsScrips\src\prototypes\creep.js **********/
 /********** Footer **********/
 if(typeof module === "object")
 	module.exports = __require(0);

@@ -16,6 +16,16 @@ global.resetRoomMem = function(name = undefined) {
 }
 
 
+function placeFlags() {
+	_.forEach(Game.flags, function(flag) {
+		if (flag.name.toLowerCase().startsWith('[place]')) {
+			flag.name = flag.name.toLowerCase().replace('[place]', `[${flag.room.name}]`);
+			console.log(flag.room, "Flag", flag.name);
+		}
+	});
+}
+
+
 module.exports.loop = function() {
 	console.log('--------------', Game.time, Game.cpu.bucket, '--------------');
 
@@ -43,6 +53,7 @@ module.exports.loop = function() {
 	});
 
 	// structureLogic
+	placeFlags();
 	for (let name in Game.structures) {
 		let structure = Game.structures[name];
 
@@ -68,10 +79,10 @@ module.exports.loop = function() {
 		}
 	}
 
-	if (Game.cpu.bucket == 10000) {
+	if (Game.cpu.bucket >= 10000) {
 		if (Game.cpu.generatePixel() === OK) {
 			console.log("[game] PixelGenerated", Game.resources.pixel + 1);
-			Game.notify(`[game] PixelGenerated ${Game.resources.pixel + 1}`);
+			if ((Game.resources.pixel + 1) % 100 === 0) Game.notify(`[game] PixelGenerated % 100 ${Game.resources.pixel + 1}`);
 		}
 	}
 }
