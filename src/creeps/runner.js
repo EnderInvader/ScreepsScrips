@@ -49,9 +49,7 @@ var roleRunner = {
 			});
 
 			if (!target) target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-				filter: (i) => (
-								i.structureType == STRUCTURE_CONTAINER
-							   ) &&
+				filter: (i) => i.structureType == STRUCTURE_CONTAINER &&
 							   i.store.getFreeCapacity(RESOURCE_ENERGY) > 0
 			});
 

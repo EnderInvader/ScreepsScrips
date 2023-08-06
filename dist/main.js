@@ -277,6 +277,28 @@ var roleStaticManager = {
 			creep.moveTo(target);
 			return;
 		}
+		
+		/** @type {StructureSpawn | StructureExtension} */
+		const needed = creep.pos.findInRange(FIND_MY_STRUCTURES, 1, {
+			filter: (structure) => (
+									structure.structureType == STRUCTURE_SPAWN ||
+									structure.structureType == STRUCTURE_EXTENSION
+								   ) &&
+								   structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+		}).sort((a,b) => a.store[RESOURCE_ENERGY] - b.store[RESOURCE_ENERGY])[0];
+
+		if (needed) {
+			if (creep.store[RESOURCE_ENERGY] > 0) creep.transfer(needed, RESOURCE_ENERGY);
+			else {
+				/** @type {STRUCTURE_CONTAINER} */
+				const container = creep.pos.findInRange(FIND_STRUCTURES, 1, {
+					filter: (structure) => structure.structureType == STRUCTURE_CONTAINER &&
+										   structure.store[RESOURCE_ENERGY] > 0
+				}).sort((a,b) => a.store[RESOURCE_ENERGY] - b.store[RESOURCE_ENERGY])[0];
+
+				if (container) creep.withdraw(container, RESOURCE_ENERGY);
+			}
+		}
 	},
 	/** 
 	 * @param {Room} room
@@ -388,9 +410,7 @@ var roleRunner = {
 			});
 
 			if (!target) target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-				filter: (i) => (
-								i.structureType == STRUCTURE_CONTAINER
-							   ) &&
+				filter: (i) => i.structureType == STRUCTURE_CONTAINER &&
 							   i.store.getFreeCapacity(RESOURCE_ENERGY) > 0
 			});
 
@@ -1086,8 +1106,7 @@ __modules[16] = function(module, exports) {
 var extension = {
 
 	/** @param {Structure} structure **/
-	run: function(structure) {
-	},
+	run: function(structure) {},
 };
 
 module.exports = extension;

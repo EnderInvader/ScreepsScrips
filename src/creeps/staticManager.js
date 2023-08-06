@@ -32,7 +32,29 @@ var roleStaticManager = {
 			return;
 		}
 
-		// TODO: staticManager logic
+		// move energy from container to spawns and extensions
+		
+		/** @type {StructureSpawn | StructureExtension} */
+		const needed = creep.pos.findInRange(FIND_MY_STRUCTURES, 1, {
+			filter: (structure) => (
+									structure.structureType == STRUCTURE_SPAWN ||
+									structure.structureType == STRUCTURE_EXTENSION
+								   ) &&
+								   structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+		}).sort((a,b) => a.store[RESOURCE_ENERGY] - b.store[RESOURCE_ENERGY])[0];
+
+		if (needed) {
+			if (creep.store[RESOURCE_ENERGY] > 0) creep.transfer(needed, RESOURCE_ENERGY);
+			else {
+				/** @type {STRUCTURE_CONTAINER} */
+				const container = creep.pos.findInRange(FIND_STRUCTURES, 1, {
+					filter: (structure) => structure.structureType == STRUCTURE_CONTAINER &&
+										   structure.store[RESOURCE_ENERGY] > 0
+				}).sort((a,b) => a.store[RESOURCE_ENERGY] - b.store[RESOURCE_ENERGY])[0];
+
+				if (container) creep.withdraw(container, RESOURCE_ENERGY);
+			}
+		}
 	},
 	
 	// checks if the room needs to spawn a creep
