@@ -2,10 +2,11 @@ var spawn = {
 
 	/** @param {StructureSpawn} structure **/
 	run: function(structure) {
-		var recycles = _.filter(Game.creeps, (search) => search.memory.role == 'recycle' && search.room.name == structure.room.name && search.ticksToLive < 20 && search.pos.isNearTo(structure.pos));
-		recycles.sort((a, b) => a.ticksToLive - b.ticksToLive);
+		let recycles = _.filter(Game.creeps, (search) => search.memory.role == 'recycle' && search.room.name == structure.room.name && search.ticksToLive < 30 && search.store === 0 && search.pos.isNearTo(structure.pos));
+		if (recycles.length === 0) _.filter(Game.creeps, (search) => search.memory.role == 'recycle' && search.room.name == structure.room.name && search.ticksToLive < 10 && search.pos.isNearTo(structure.pos));
 		
-		if (structure.recycleCreep(recycles[0]) === OK) console.log(structure.room, 'Recycle', recycles[0].name);
+		if (recycles.length > 1) recycles.sort((a, b) => a.ticksToLive - b.ticksToLive);
+		if (recycles[0] && structure.recycleCreep(recycles[0]) === OK) console.log(structure.room, 'Recycle', recycles[0].name);
 
 		if (structure.spawning && Game.flags[`[${structure.room.name}]RapidFillCluster`]) {
 			const flag = Game.flags[`[${structure.room.name}]RapidFillCluster`];

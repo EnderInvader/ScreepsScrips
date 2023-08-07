@@ -1,20 +1,30 @@
 let creepLogic = require("../creeps/index");
 let creepTypes = _.keys(creepLogic);
+const { AlertStatus } = require("./roomMemory");
 
 /** @param {Room} room **/
 function spawnCreeps(room) {
 
 	// find the first or 0th spawn in the room
-	let spawns = room.find(FIND_MY_SPAWNS);
+	let spawns = room.find(FIND_MY_SPAWNS, {
+		filter: function(spawn) {
+			return !spawn.spawning;
+		}
+	});
 	if (spawns.length > 1) {
 		spawns.sort((a,b) => b.store[RESOURCE_ENERGY] - a.store[RESOURCE_ENERGY]);
 	}
 	let spawn = spawns[0];
+	if (!spawn) return;
 
-	// find a creep type that returns true for the .spawn() function
-	let creepTypeNeeded = _.find(creepTypes, function(type) {
-		return creepLogic[type].spawn(room, spawn);
-	});
+	let creepTypeNeeded;
+	if (room.memory.alertStatus[0] === AlertStatus.Defensive) creepTypeNeeded = "defender";
+	else {
+		// find a creep type that returns true for the .spawn() function
+		creepTypeNeeded = _.find(creepTypes, function(type) {
+			return creepLogic[type].spawn(room, spawn);
+		});
+	}
 
 	// get the data for spawning a new creep of creepTypeNeeded
 	let creepSpawnData = creepLogic[creepTypeNeeded] && creepLogic[creepTypeNeeded].spawnData(room);

@@ -69,7 +69,7 @@ var roleStaticManager = {
 			if (room.controller.level >= 4) {
 				if (staticManagers.length < 4) return true;
 			}
-			else {
+			else if (room.controller.level > 1) {
 				if (staticManagers.length < 2) return true;
 			}
 		}

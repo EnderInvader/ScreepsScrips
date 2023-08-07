@@ -1,3 +1,5 @@
+const roleUpgrader = require("./upgrader");
+
 var roleBuilder = {
 	status: {
 		idle: 0,
@@ -53,9 +55,14 @@ var roleBuilder = {
 			}
 		}
 		else if (status === this.status.working) {
-			let target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
-			if (creep.build(target) == ERR_NOT_IN_RANGE) {
-				creep.moveTo(target);
+			let target = creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
+			if (target) {
+				if (creep.build(target) == ERR_NOT_IN_RANGE) {
+					creep.moveTo(target);
+				}
+			}
+			else {
+				roleUpgrader.run(creep);
 			}
 		}
 	},

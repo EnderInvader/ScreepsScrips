@@ -1,3 +1,5 @@
+const { ControllerSigns } = require("../room/roomMemory");
+
 var roleUpgrader = {
 	status: {
 		idle: 0,
@@ -53,9 +55,13 @@ var roleUpgrader = {
 			}
 		}
 		else if (status === this.status.working) {
-			if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-				creep.moveTo(creep.room.controller);
+			const sign = ControllerSigns[creep.room.memory.type];
+			if (!creep.room.controller.sign || creep.room.controller.sign.text != sign) {
+				creep.signController(creep.room.controller, sign);
 			}
+
+			creep.upgradeController(creep.room.controller);
+			creep.moveTo(creep.room.controller);
 		}
 	},
 	
@@ -68,7 +74,7 @@ var roleUpgrader = {
 		var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader' && creep.room.name == room.name);
 		//console.log(room, 'Upgraders: ' + upgraders.length);
 
-		if (upgraders.length < 4) {
+		if (upgraders.length < 2) {
 			return true;
 		}
 	},

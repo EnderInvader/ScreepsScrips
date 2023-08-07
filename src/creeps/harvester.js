@@ -11,9 +11,6 @@ var roleHarvester = {
 			}
 		}
 		else {
-			// here is the sayHello() prototype
-			//creep.sayHello();
-			
 			if (creep.transfer(creep.room.find(FIND_MY_SPAWNS)[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 				creep.moveTo(creep.room.find(FIND_MY_SPAWNS)[0]);
 			}
@@ -27,7 +24,6 @@ var roleHarvester = {
 	 */
 	spawn: function(room, spawn) {
 		var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester' && creep.room.name == room.name);
-		console.log(room, 'Harvesters: ' + harvesters.length);
 
 		if (harvesters.length < 2) {
 			return true;
@@ -45,4 +41,4 @@ var roleHarvester = {
 	}
 };
 
-module.exports = harvester;
+module.exports = roleHarvester;

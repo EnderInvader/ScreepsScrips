@@ -1,7 +1,8 @@
 let creepLogic = require('./creeps');
-let roomLogic = require('./room');
+const roomLogic = require('./room');
 let structureLogic = require('./structures');
 let prototypes = require('./prototypes');
+const { globalMemory } = require('./global');
 
 
 global.resetRoomMem = function(name = undefined) {
@@ -9,7 +10,18 @@ global.resetRoomMem = function(name = undefined) {
 		if (Memory.rooms[name]) delete Memory.rooms[name];
 	}
 	else {
-		Memory.rooms = {};
+		delete Memory.rooms;
+	}
+	
+	return true;
+}
+
+global.resetHostileROE = function(name = undefined) {
+	if (name) {
+		if (Memory.hostiles[name]) delete Memory.hostiles[name];
+	}
+	else {
+		delete Memory.hostiles;
 	}
 	
 	return true;
@@ -19,8 +31,9 @@ global.resetRoomMem = function(name = undefined) {
 function placeFlags() {
 	_.forEach(Game.flags, function(flag) {
 		if (flag.name.toLowerCase().startsWith('[place]')) {
-			flag.name = flag.name.toLowerCase().replace('[place]', `[${flag.room.name}]`);
-			console.log(flag.room, "Flag", flag.name);
+			let flagName = flag.name.toLowerCase().replace('[place]', `[${flag.room.name}]`);
+			flag.room.createFlag(flag.pos, flagName);
+			console.log(flag.room, "Flag", flagName);
 		}
 	});
 }
@@ -37,19 +50,29 @@ module.exports.loop = function() {
 		}
 	}
 
+	globalMemory();
+
 	// make a list of all of our rooms
 	/** @type {Room[]} */
 	let myRooms = _.filter(Game.rooms, r => r.controller && r.controller.level > 0 && r.controller.my);
 
 	// roomLogic
 	_.forEach(myRooms, function (room) {
-		roomLogic.main(room);
+		if (room.controller.safeMode) {
+			console.log(room, "SafeMode", room.controller.safeMode);
+			if (room.controller.safeMode === 450) Game.notify(`${room} SafeMode ${room.controller.safeMode}`);
+			else if (room.controller.safeMode === 50) Game.notify(`${room} SafeMode ${room.controller.safeMode}`);
+		}
 
 		let nukes = room.find(FIND_NUKES);
 		_.forEach(nukes, function(nuke) {
 			console.log(room, "NUKE", nuke.timeToLand, nuke.launchRoomName);
 			if (nuke.timeToLand === 49950) Game.notify(`${room} NUKE ${nuke.timeToLand} ${nuke.launchRoomName}`);
+			else if (nuke.timeToLand === 450) Game.notify(`${room} NUKE ${nuke.timeToLand} ${nuke.launchRoomName}`);
+			else if (nuke.timeToLand === 50) Game.notify(`${room} NUKE ${nuke.timeToLand} ${nuke.launchRoomName}`);
 		});
+
+		roomLogic(room);
 	});
 
 	// structureLogic
@@ -81,8 +104,8 @@ module.exports.loop = function() {
 
 	if (Game.cpu.bucket >= 10000) {
 		if (Game.cpu.generatePixel() === OK) {
-			console.log("[game] PixelGenerated", Game.resources.pixel + 1);
-			if ((Game.resources.pixel + 1) % 100 === 0) Game.notify(`[game] PixelGenerated % 100 ${Game.resources.pixel + 1}`);
+			console.log("[global] PixelGenerated", Game.resources.pixel + 1);
+			if ((Game.resources.pixel + 1) % 100 === 0) Game.notify(`[global] PixelGenerated % 100 ${Game.resources.pixel + 1}`);
 		}
 	}
 }

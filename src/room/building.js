@@ -148,6 +148,50 @@ function buildPriority(room, structureType) {
 		})
 		if (build) return {x:build.x + Flag_AnchorCluster.pos.x, y:build.y + Flag_AnchorCluster.pos.y};
 	}
+
+	const Flag_ExtensionCluster = Game.flags[`[${room.name}]ExtensionCluster`];
+	if (Flag_ExtensionCluster) {
+		_.forEach(ExtensionCluster[structureType], function(pos) {
+			const structure = room.lookForAt(LOOK_STRUCTURES, pos.x + Flag_ExtensionCluster.pos.x, pos.y + Flag_ExtensionCluster.pos.y).filter(found => found.structureType === structureType)[0];
+			if (structure) {
+				//console.log(pos.p, structure.structureType, JSON.stringify(structure.pos));
+				return true;
+			}
+			
+			const constructionSite = room.lookForAt(LOOK_CONSTRUCTION_SITES, pos.x + Flag_ExtensionCluster.pos.x, pos.y + Flag_ExtensionCluster.pos.y).filter(found => found.structureType === structureType)[0];
+			if (constructionSite) {
+				//console.log(pos.p, constructionSite.structureType, JSON.stringify(constructionSite.pos));
+				return true;
+			}
+
+			build = pos;
+			//console.log(structureType, pos.p, ' x',pos.x,pos.x + Flag_ExtensionCluster.pos.x, ' y',pos.y,pos.y + Flag_ExtensionCluster.pos.y);
+			return false;
+		})
+		if (build) return {x:build.x + Flag_ExtensionCluster.pos.x, y:build.y + Flag_ExtensionCluster.pos.y};
+	}
+
+	const Flag_LabCluster = Game.flags[`[${room.name}]LabCluster`];
+	if (Flag_LabCluster) {
+		_.forEach(LabCluster[structureType], function(pos) {
+			const structure = room.lookForAt(LOOK_STRUCTURES, pos.x + Flag_LabCluster.pos.x, pos.y + Flag_LabCluster.pos.y).filter(found => found.structureType === structureType)[0];
+			if (structure) {
+				//console.log(pos.p, structure.structureType, JSON.stringify(structure.pos));
+				return true;
+			}
+			
+			const constructionSite = room.lookForAt(LOOK_CONSTRUCTION_SITES, pos.x + Flag_LabCluster.pos.x, pos.y + Flag_LabCluster.pos.y).filter(found => found.structureType === structureType)[0];
+			if (constructionSite) {
+				//console.log(pos.p, constructionSite.structureType, JSON.stringify(constructionSite.pos));
+				return true;
+			}
+
+			build = pos;
+			//console.log(structureType, pos.p, ' x',pos.x,pos.x + Flag_LabCluster.pos.x, ' y',pos.y,pos.y + Flag_LabCluster.pos.y);
+			return false;
+		})
+		if (build) return {x:build.x + Flag_LabCluster.pos.x, y:build.y + Flag_LabCluster.pos.y};
+	}
 }
 
 const structurePriority = [
